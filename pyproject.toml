@@ -1,0 +1,7 @@
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+markers = [
+    "parity: cross-engine parity tests",
+    "slow: requires real data or a long run",
+]

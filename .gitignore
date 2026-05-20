@@ -1,0 +1,37 @@
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/.venv/
+**/venv/
+**/.pytest_cache/
+**/*.egg-info/
+**/dist/
+**/build/
+
+# Rust
+**/target/
+
+# uv
+**/.python-version
+
+# Editors
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Secrets — track .env.example, never the real .env
+.env
+.env.local
+**/wallet_keys/
+**/*.privkey
+**/*.pem
+
+# Local config overrides
+configs/*.local.json
+
+# Generated data
+data/
+!data/.gitkeep
+output/
+!output/.gitkeep
