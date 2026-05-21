@@ -49,6 +49,15 @@ What we show is an honest, autonomous, verifiable trading agent.
 
 Work in progress during the hackathon. Building in public.
 
+## Roadmap
+
+- [x] Project scaffold and test setup
+- [ ] Engine core: multi-coin data, forecasting, cost model, risk, paper
+  execution
+- [ ] AI agent: tool-using reasoning loop with decision explanations
+- [ ] On-chain receipts on Arc: verifiable decisions and PnL
+- [ ] Live dashboard reading the chain
+
 ## Repository layout
 
 ```
