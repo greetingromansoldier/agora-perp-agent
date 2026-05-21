@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+import pytest
+
 from core.contracts import MarketData, OhlcBar
 from core.data import CsvSource, HyperliquidSource, fetch_board
 
@@ -38,12 +40,8 @@ def test_csv_source_respects_window(tmp_path):
 
 def test_csv_source_unknown_asset(tmp_path):
     src = CsvSource({"BTC": _write_csv(tmp_path)})
-    try:
+    with pytest.raises(ValueError, match="ETH"):
         src.fetch("ETH", window=10)
-    except ValueError as exc:
-        assert "ETH" in str(exc)
-    else:
-        raise AssertionError("expected ValueError for unknown asset")
 
 
 def test_fetch_board(tmp_path):
@@ -86,9 +84,5 @@ def test_parse_ctx_maps_by_universe_index():
 
 
 def test_parse_ctx_unknown_asset():
-    try:
+    with pytest.raises(ValueError, match="DOGE"):
         HyperliquidSource._parse_ctx(_META_CTX, "DOGE")
-    except ValueError as exc:
-        assert "DOGE" in str(exc)
-    else:
-        raise AssertionError("expected ValueError for unknown asset")
