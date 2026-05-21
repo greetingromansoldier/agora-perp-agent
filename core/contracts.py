@@ -53,3 +53,27 @@ class MarketData:
     funding_rate: float
     bars: tuple[OhlcBar, ...]
     book_depth: float | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class Forecast:
+    """directional forecast for one asset over the next tick.
+
+    ``p_up + p_down`` need not sum to 1; the remaining mass is the
+    implicit "flat / no edge" probability.
+
+    Attributes:
+        asset: market symbol.
+        timestamp: forecast time (the latest bar's time).
+        p_up: probability price rises over the horizon (0..1).
+        p_down: probability price falls over the horizon (0..1).
+        expected_move_bps: signed magnitude estimate in basis points.
+        confidence: model self-reported confidence (0..1).
+    """
+
+    asset: str
+    timestamp: datetime
+    p_up: float
+    p_down: float
+    expected_move_bps: float
+    confidence: float
