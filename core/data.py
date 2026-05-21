@@ -30,7 +30,17 @@ _INTERVAL_MS: dict[str, int] = {
 class DataSource(Protocol):
     """Returns a `MarketData` snapshot for one asset."""
 
-    def fetch(self, asset: str, window: int) -> MarketData: ...
+    def fetch(self, asset: str, window: int) -> MarketData:
+        """Return a market snapshot for one asset.
+
+        Args:
+            asset: market symbol, e.g. "BTC".
+            window: number of recent candles to include.
+
+        Returns:
+            A `MarketData` snapshot.
+        """
+        ...
 
 
 def fetch_board(
@@ -62,9 +72,28 @@ class CsvSource:
     """
 
     def __init__(self, paths: dict[str, str | Path]) -> None:
+        """Store the per-asset CSV paths.
+
+        Args:
+            paths: mapping of asset symbol to its CSV file path.
+        """
         self._paths = {asset: Path(p) for asset, p in paths.items()}
 
     def fetch(self, asset: str, window: int) -> MarketData:
+        """Read the asset's CSV and return its latest snapshot.
+
+        Args:
+            asset: market symbol to read.
+            window: number of most-recent candles to keep.
+
+        Returns:
+            A `MarketData` snapshot. Mark price is the last close; funding
+            is the last non-empty ``funding`` cell (0.0 if absent).
+
+        Raises:
+            ValueError: if the asset has no configured path, the file is
+                missing, or it contains no rows.
+        """
         path = self._paths.get(asset)
         if path is None:
             raise ValueError(f"No CSV path configured for asset `{asset}`.")
@@ -116,6 +145,15 @@ class HyperliquidSource:
     """
 
     def __init__(self, interval: str = "1m", timeout_s: float = 10.0) -> None:
+        """Configure the candle interval and request timeout.
+
+        Args:
+            interval: candle interval; one of the supported keys.
+            timeout_s: per-request timeout in seconds.
+
+        Raises:
+            ValueError: if ``interval`` is not supported.
+        """
         if interval not in _INTERVAL_MS:
             raise ValueError(
                 f"Unsupported interval `{interval}`. "
@@ -125,6 +163,19 @@ class HyperliquidSource:
         self._timeout_s = timeout_s
 
     def fetch(self, asset: str, window: int) -> MarketData:
+        """Fetch live candles, mark price, and funding for one asset.
+
+        Args:
+            asset: market symbol, e.g. "BTC".
+            window: number of most-recent candles to keep.
+
+        Returns:
+            A `MarketData` snapshot timestamped at the latest candle.
+
+        Raises:
+            ValueError: if no candles are returned or the asset is absent
+                from the Hyperliquid universe.
+        """
         now_ms = int(datetime.now(tz=timezone.utc).timestamp() * 1000)
         span_ms = _INTERVAL_MS[self._interval] * (window + 1)
         candles_raw = self._post(
@@ -162,6 +213,7 @@ class HyperliquidSource:
 
     @staticmethod
     def _parse_candles(raw: object) -> tuple[OhlcBar, ...]:
+        """Parse a Hyperliquid candleSnapshot payload into bars."""
         if not isinstance(raw, list):
             raise ValueError("Unexpected candle payload (expected a list).")
         bars = [
@@ -179,7 +231,10 @@ class HyperliquidSource:
 
     @staticmethod
     def _parse_ctx(raw: object, asset: str) -> tuple[float, float]:
-        # metaAndAssetCtxs -> [meta, ctxs] aligned by universe index.
+        """Extract (mark_price, funding) for an asset from metaAndAssetCtxs.
+
+        The payload is ``[meta, ctxs]`` aligned by universe index.
+        """
         if not isinstance(raw, list) or len(raw) != 2:
             raise ValueError("Unexpected metaAndAssetCtxs payload.")
         meta, ctxs = raw
