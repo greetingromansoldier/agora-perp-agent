@@ -86,10 +86,10 @@ class FeeSchedule:
     Defaults are the Hyperliquid base tier (maker 1.5 bps / taker 4.5 bps,
     hourly funding cadence). ``slippage_k`` is the dimensionless constant in
     the sqrt-law impact formula ``impact ≈ k · √(notional/depth)``; default
-    ``0.5`` is a working baseline that must be calibrated against actual fills
-    before any number leaves the lab. ``flat_slippage_bps`` is the
-    conservative per-side fallback applied when ``MarketData.book_depth`` is
-    unavailable.
+    ``0.005`` is a working baseline for top perps (BTC/ETH on HL) — calibrate
+    against actual fills per asset before any number leaves the lab.
+    ``flat_slippage_bps`` is the conservative per-side fallback applied when
+    ``MarketData.book_depth`` is unavailable.
 
     Attributes:
         maker_bps: maker fee in basis points of notional.
@@ -102,7 +102,7 @@ class FeeSchedule:
     maker_bps: float = 1.5
     taker_bps: float = 4.5
     funding_period_hours: float = 1.0
-    slippage_k: float = 0.5
+    slippage_k: float = 0.005
     flat_slippage_bps: float = 30.0
 
 
