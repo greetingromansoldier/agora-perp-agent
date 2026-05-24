@@ -351,6 +351,39 @@ class AgentState:
 
 
 @dataclass(frozen=True, slots=True)
+class TradeRationale:
+    """structured per-decision reasoning record; fixed shape across ticks.
+
+    The schema is rigid on purpose: trace logs stay comparable across
+    decisions, Arc receipts (L9) commit to a stable hash shape, and the
+    LLM is prevented from drifting into stream-of-consciousness prose.
+    Every field is required so omissions are caught at parse time.
+
+    Attributes:
+        decision_id: monotonic identifier within the process run, e.g.
+            ``"d-0007"``. Carried through veto / skip / execute so the
+            trace can be joined later.
+        indicators: feature values the agent cited; ``name → value`` (e.g.
+            ``{"p_up": 0.72, "rsi14": 65.4, "funding_rate": 0.0001}``).
+            Only inputs, not derived numbers.
+        numbers: derived metrics the agent cited; ``name → value`` (e.g.
+            ``{"edge_bps": -15.3, "round_trip_cost_bps": 20.5}``). These
+            must come from tool calls — the LLM is forbidden from inventing.
+        reasoning: one short paragraph (1–2 sentences) — the agent's
+            actual conclusion. No Tolstoy.
+        pros: 1–3 short bullets supporting the action.
+        cons: 0–3 short bullets acknowledging counter-points.
+    """
+
+    decision_id: str
+    indicators: dict[str, float]
+    numbers: dict[str, float]
+    reasoning: str
+    pros: tuple[str, ...]
+    cons: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class Decision:
     """one per-asset action the agent proposes for this tick.
 
@@ -363,7 +396,7 @@ class Decision:
         asset: market symbol.
         action: one of ``"enter" | "hold" | "cut" | "flip" | "skip"``.
         side: ``"long"`` or ``"short"`` for enter/flip; ``None`` otherwise.
-        rationale: short human-readable reason from the agent.
+        rationale: structured per-decision rationale (`TradeRationale`).
         vetoed_reason: filled by the executor wrapper if the risk gate
             vetoed an `enter`/`flip`; otherwise ``None``.
     """
@@ -371,7 +404,7 @@ class Decision:
     asset: str
     action: str
     side: str | None
-    rationale: str
+    rationale: TradeRationale
     vetoed_reason: str | None = None
 
 
