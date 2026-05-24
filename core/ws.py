@@ -184,6 +184,7 @@ class HyperliquidWsSource:
                     asyncio.create_task(self._poll_ohlcv_loop(exchange, symbol, coin))
                 )
 
+            tasks.append(asyncio.create_task(self._poll_meta_loop()))
             tasks.append(asyncio.create_task(self._readiness_watcher()))
 
             # Idle until asked to stop.
@@ -225,6 +226,23 @@ class HyperliquidWsSource:
                 raise
         if last_err is not None:
             raise last_err
+
+    async def _poll_meta_loop(self) -> None:
+        """Keep the REST meta cache warm in the background.
+
+        `HyperliquidSource._meta()` is the REST call that gives us mark
+        and funding for every coin. Its built-in TTL is 2 s, so without
+        this background refresher the *first* `fetch()` after a 2-second
+        gap would block on a synchronous network call (~1 s). By touching
+        it on a slightly tighter cadence here, every `fetch()` reads from
+        an already-warm cache and returns in microseconds.
+        """
+        while not self._stop.is_set():
+            try:
+                await asyncio.to_thread(self._rest._meta)
+            except Exception as e:  # noqa: BLE001
+                print(f"[meta poll] {e}", file=sys.stderr)
+            await asyncio.sleep(1.5)
 
     async def _readiness_watcher(self) -> None:
         """Set the `ready` event once every coin cache has bars + book."""
