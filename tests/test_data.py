@@ -86,3 +86,62 @@ def test_parse_ctx_maps_by_universe_index():
 def test_parse_ctx_unknown_asset():
     with pytest.raises(ValueError, match="DOGE"):
         HyperliquidSource._parse_ctx(_META_CTX, "DOGE")
+
+
+# --- L2 book parsing and depth ---
+
+_L2 = {
+    "coin": "BTC",
+    "time": 1747785660000,
+    "levels": [
+        # bids (highest first): each 0.5 BTC at 99.5 / 99.0 / 98.0
+        [{"px": "99.5", "sz": "0.5"}, {"px": "99.0", "sz": "0.5"}, {"px": "98.0", "sz": "0.5"}],
+        # asks (lowest first): each 0.5 BTC at 100.5 / 101.0 / 102.0
+        [{"px": "100.5", "sz": "0.5"}, {"px": "101.0", "sz": "0.5"}, {"px": "102.0", "sz": "0.5"}],
+    ],
+}
+
+
+def test_parse_l2book_returns_typed_levels():
+    bids, asks = HyperliquidSource._parse_l2book(_L2)
+    assert bids[0] == (99.5, 0.5)
+    assert asks[-1] == (102.0, 0.5)
+    assert all(isinstance(px, float) and isinstance(sz, float) for px, sz in bids + asks)
+
+
+def test_parse_l2book_rejects_bad_shape():
+    with pytest.raises(ValueError, match="levels"):
+        HyperliquidSource._parse_l2book({"coin": "BTC"})
+    with pytest.raises(ValueError, match="levels"):
+        HyperliquidSource._parse_l2book({"levels": [[{"px": "1", "sz": "1"}]]})
+
+
+def test_compute_depth_sums_within_band_and_averages_sides():
+    # mid = 100; band ±100 bps = ±1.0
+    bids, asks = HyperliquidSource._parse_l2book(_L2)
+    depth = HyperliquidSource._compute_depth(bids, asks, mid=100.0, band_bps=100.0)
+    # within ±1 of mid: bids @ 99.5 (0.5 BTC) and 99.0 (just on the edge: 100-99=1<=1)
+    bid_notional = 99.5 * 0.5 + 99.0 * 0.5
+    ask_notional = 100.5 * 0.5 + 101.0 * 0.5
+    assert depth == pytest.approx(0.5 * (bid_notional + ask_notional), rel=1e-12)
+
+
+def test_compute_depth_excludes_levels_outside_band():
+    bids, asks = HyperliquidSource._parse_l2book(_L2)
+    # tight band ±50 bps = ±0.5 of mid 100; only 99.5 and 100.5 qualify
+    depth = HyperliquidSource._compute_depth(bids, asks, mid=100.0, band_bps=50.0)
+    assert depth == pytest.approx(0.5 * (99.5 * 0.5 + 100.5 * 0.5), rel=1e-12)
+
+
+def test_compute_depth_returns_zero_for_invalid_mid_or_band():
+    bids, asks = HyperliquidSource._parse_l2book(_L2)
+    assert HyperliquidSource._compute_depth(bids, asks, mid=0.0, band_bps=50.0) == 0.0
+    assert HyperliquidSource._compute_depth(bids, asks, mid=100.0, band_bps=0.0) == 0.0
+
+
+def test_compute_depth_handles_empty_sides():
+    empty: tuple[tuple[float, float], ...] = ()
+    asks = ((100.5, 0.5), (101.0, 0.5))
+    depth = HyperliquidSource._compute_depth(empty, asks, mid=100.0, band_bps=100.0)
+    # bid side contributes 0, ask side contributes (100.5 + 101.0) × 0.5; avg / 2
+    assert depth == pytest.approx(0.5 * (100.5 * 0.5 + 101.0 * 0.5), rel=1e-12)
