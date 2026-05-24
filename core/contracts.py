@@ -323,3 +323,66 @@ class RiskVerdict:
     approved: bool
     reason: str
     adjusted_size: float | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class AgentState:
+    """snapshot the agent reads at the start of each tick.
+
+    `portfolio` is intentionally a live reference, not a copy — in a
+    single-threaded loop the agent reads it during `decide()`, then the
+    engine continues mutating it on open/close. The frozen-dataclass
+    wrapper just guarantees the agent gets *one* coherent state object,
+    not that the dict inside it is immutable.
+
+    Attributes:
+        timestamp: tick time.
+        board: per-asset (forecast, cost) for everything scanned this tick.
+        candidates: ranked top-K from `allocate()`, best first.
+        portfolio: live portfolio (read-only by convention).
+        recent_fills: last few fills, oldest first; context for the agent.
+    """
+
+    timestamp: datetime
+    board: dict[str, tuple["Forecast", "CostAssessment"]]
+    candidates: tuple["AllocationCandidate", ...]
+    portfolio: "PortfolioState"
+    recent_fills: tuple["Fill", ...]
+
+
+@dataclass(frozen=True, slots=True)
+class Decision:
+    """one per-asset action the agent proposes for this tick.
+
+    The risk gate may veto an `enter` or `flip` — in that case the
+    decision is still recorded for the trace log with ``vetoed_reason``
+    set; no fill is produced. ``side`` is required for `enter`/`flip`
+    and ``None`` for `hold`/`cut`/`skip`.
+
+    Attributes:
+        asset: market symbol.
+        action: one of ``"enter" | "hold" | "cut" | "flip" | "skip"``.
+        side: ``"long"`` or ``"short"`` for enter/flip; ``None`` otherwise.
+        rationale: short human-readable reason from the agent.
+        vetoed_reason: filled by the executor wrapper if the risk gate
+            vetoed an `enter`/`flip`; otherwise ``None``.
+    """
+
+    asset: str
+    action: str
+    side: str | None
+    rationale: str
+    vetoed_reason: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class Decisions:
+    """ordered per-asset decisions plus a top-level summary for the trace.
+
+    Attributes:
+        decisions: tuple of `Decision`, one per asset the agent considered.
+        summary: one-line agent-authored summary of the tick's reasoning.
+    """
+
+    decisions: tuple[Decision, ...]
+    summary: str
