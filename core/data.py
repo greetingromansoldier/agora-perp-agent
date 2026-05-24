@@ -244,3 +244,46 @@ class HyperliquidSource:
                 ctx = ctxs[idx]
                 return float(ctx["markPx"]), float(ctx["funding"])
         raise ValueError(f"Asset `{asset}` not found in Hyperliquid universe.")
+
+    @staticmethod
+    def _parse_l2book(raw: object) -> tuple[
+        tuple[tuple[float, float], ...],
+        tuple[tuple[float, float], ...],
+    ]:
+        """Parse a Hyperliquid l2Book payload into (bids, asks) levels.
+
+        Each side is a tuple of ``(price, size)`` pairs. Hyperliquid returns
+        ``{"coin": str, "time": int, "levels": [bids, asks]}`` where bids are
+        sorted highest-first and asks lowest-first.
+        """
+        if not isinstance(raw, dict) or "levels" not in raw:
+            raise ValueError("Unexpected l2Book payload (missing `levels`).")
+        levels = raw["levels"]
+        if not isinstance(levels, list) or len(levels) != 2:
+            raise ValueError("Unexpected l2Book `levels` shape (need [bids, asks]).")
+        bids_raw, asks_raw = levels
+        bids = tuple((float(lv["px"]), float(lv["sz"])) for lv in bids_raw)
+        asks = tuple((float(lv["px"]), float(lv["sz"])) for lv in asks_raw)
+        return bids, asks
+
+    @staticmethod
+    def _compute_depth(
+        bids: tuple[tuple[float, float], ...],
+        asks: tuple[tuple[float, float], ...],
+        mid: float,
+        band_bps: float,
+    ) -> float:
+        """Average per-side notional inside ±``band_bps`` of ``mid``.
+
+        Sums ``price × size`` for every level whose distance from ``mid`` is
+        within the band, separately on each side, and returns the average.
+        Averaging keeps the sqrt-law denominator a single number while
+        smoothing slight bid/ask asymmetry; the conservative ``slippage_k``
+        absorbs the residual.
+        """
+        if mid <= 0.0 or band_bps <= 0.0:
+            return 0.0
+        band = mid * band_bps / 10_000.0
+        bid_notional = sum(px * sz for px, sz in bids if mid - px <= band)
+        ask_notional = sum(px * sz for px, sz in asks if px - mid <= band)
+        return 0.5 * (bid_notional + ask_notional)
