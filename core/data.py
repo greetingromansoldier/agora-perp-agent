@@ -144,12 +144,19 @@ class HyperliquidSource:
     public feed so paper PnL stays honest.
     """
 
-    def __init__(self, interval: str = "1m", timeout_s: float = 10.0) -> None:
-        """Configure the candle interval and request timeout.
+    def __init__(
+        self,
+        interval: str = "1m",
+        timeout_s: float = 10.0,
+        band_bps: float = 50.0,
+    ) -> None:
+        """Configure the candle interval, request timeout, and depth band.
 
         Args:
             interval: candle interval; one of the supported keys.
             timeout_s: per-request timeout in seconds.
+            band_bps: half-width of the price band (in bps of mid) used to
+                aggregate L2 book notional into ``MarketData.book_depth``.
 
         Raises:
             ValueError: if ``interval`` is not supported.
@@ -161,16 +168,19 @@ class HyperliquidSource:
             )
         self._interval = interval
         self._timeout_s = timeout_s
+        self._band_bps = band_bps
 
     def fetch(self, asset: str, window: int) -> MarketData:
-        """Fetch live candles, mark price, and funding for one asset.
+        """Fetch live candles, mark, funding, and book depth for one asset.
 
         Args:
             asset: market symbol, e.g. "BTC".
             window: number of most-recent candles to keep.
 
         Returns:
-            A `MarketData` snapshot timestamped at the latest candle.
+            A `MarketData` snapshot timestamped at the latest candle, with
+            ``book_depth`` set to the average per-side notional within
+            ±``band_bps`` of book mid.
 
         Raises:
             ValueError: if no candles are returned or the asset is absent
@@ -194,12 +204,18 @@ class HyperliquidSource:
             raise ValueError(f"No candles returned for `{asset}`.")
 
         mark, funding = self._parse_ctx(self._post({"type": "metaAndAssetCtxs"}), asset)
+
+        bids, asks = self._parse_l2book(self._post({"type": "l2Book", "coin": asset}))
+        mid = 0.5 * (bids[0][0] + asks[0][0]) if bids and asks else mark
+        depth = self._compute_depth(bids, asks, mid, self._band_bps)
+
         return MarketData(
             asset=asset,
             timestamp=bars[-1].timestamp,
             mark_price=mark,
             funding_rate=funding,
             bars=bars,
+            book_depth=depth,
         )
 
     def _post(self, body: dict) -> object:
