@@ -1,12 +1,13 @@
 """core data contracts.
 
-frozen dataclasses passed between engine components. timestamps are
-stdlib datetime so this module stays dependency-free.
+Frozen dataclasses passed between engine components, plus the mutable
+state that paper trading needs (`Position`, `PortfolioState`). Timestamps
+are stdlib `datetime` so this module stays dependency-free.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 
@@ -164,3 +165,120 @@ class AllocationCandidate:
     forecast: Forecast
     cost: CostAssessment
     rank: int
+
+
+@dataclass(slots=True)
+class Position:
+    """one open paper position; mutable across ticks.
+
+    Unlike the rest of `core/contracts.py`, this dataclass is *not* frozen —
+    a live position genuinely is state: its mark moves each tick, funding
+    accrues, and unrealized PnL is read on demand. Mutability is honest here.
+
+    Attributes:
+        asset: market symbol.
+        side: ``"long"`` or ``"short"``.
+        qty: base units (e.g. BTC), always positive; direction is in `side`.
+        entry_price: realized fill price at open (mark ± entry slippage).
+        entry_time: timestamp at open.
+        last_mark: latest mark observed; the basis for unrealized PnL.
+        last_funding_ts: timestamp of the most recent funding accrual.
+        accrued_funding_usd: cumulative funding cashflow, signed. Positive
+            means we have collected; negative means we have paid.
+    """
+
+    asset: str
+    side: str
+    qty: float
+    entry_price: float
+    entry_time: datetime
+    last_mark: float
+    last_funding_ts: datetime
+    accrued_funding_usd: float = 0.0
+
+    def unrealized_pnl_usd(self) -> float:
+        """Mark-to-market PnL on the price leg, in USD; excludes funding."""
+        if self.side == "long":
+            return (self.last_mark - self.entry_price) * self.qty
+        return (self.entry_price - self.last_mark) * self.qty
+
+
+@dataclass(slots=True)
+class PortfolioState:
+    """mutable account state for paper trading.
+
+    Carries the free cash balance and a map of open positions, keyed by
+    asset. ``balance_usd`` updates on every realized cashflow (fee at open,
+    realized PnL at close). Unrealized PnL and accrued funding live on the
+    positions themselves; equity sums everything.
+
+    Attributes:
+        starting_balance_usd: initial cash; never changes after creation.
+        balance_usd: current free cash, including all realized cashflows.
+        positions: open positions keyed by asset.
+    """
+
+    starting_balance_usd: float
+    balance_usd: float
+    positions: dict[str, Position] = field(default_factory=dict)
+
+    @classmethod
+    def empty(cls, starting_balance: float = 1_000_000.0) -> PortfolioState:
+        """Create an empty portfolio whose balance equals `starting_balance`."""
+        return cls(
+            starting_balance_usd=starting_balance,
+            balance_usd=starting_balance,
+        )
+
+    def has(self, asset: str) -> bool:
+        """True iff there is an open position on `asset`."""
+        return asset in self.positions
+
+    @property
+    def realized_pnl_usd(self) -> float:
+        """Cumulative realized PnL since inception, in USD."""
+        return self.balance_usd - self.starting_balance_usd
+
+    def unrealized_usd(self) -> float:
+        """Sum of price-leg unrealized PnL plus accrued funding, across positions."""
+        return sum(
+            p.unrealized_pnl_usd() + p.accrued_funding_usd
+            for p in self.positions.values()
+        )
+
+    def equity_usd(self) -> float:
+        """Total account value: ``balance + Σ(unrealized + accrued_funding)``."""
+        return self.balance_usd + self.unrealized_usd()
+
+    def exposure_usd(self) -> float:
+        """Sum of mark-priced notional across open positions, in USD."""
+        return sum(p.qty * p.last_mark for p in self.positions.values())
+
+
+@dataclass(frozen=True, slots=True)
+class Fill:
+    """historical execution event; frozen because it is a fact of the past.
+
+    Emitted by `SimExecutor.open` and `SimExecutor.close`, appended to the
+    trace log, and (later, at L9) hashed onto Arc as a verifiable receipt.
+
+    Attributes:
+        asset: market symbol.
+        timestamp: execution time (the market snapshot's timestamp at fill).
+        side: the position's side, ``"long"`` or ``"short"`` (not the action).
+        qty: base units filled.
+        price: realized fill price after slippage.
+        fee_paid_usd: taker fee paid on this fill.
+        is_open: True if this fill opened the position; False if it closed.
+        realized_pnl_usd: ``0`` for opening fills; signed realized PnL on
+            closing fills (``price_pnl + accrued_funding − exit_fee``).
+    """
+
+    asset: str
+    timestamp: datetime
+    side: str
+    qty: float
+    price: float
+    fee_paid_usd: float
+    is_open: bool
+    realized_pnl_usd: float = 0.0
