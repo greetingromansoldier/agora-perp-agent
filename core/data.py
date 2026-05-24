@@ -45,19 +45,37 @@ class DataSource(Protocol):
 
 
 def fetch_board(
-    source: DataSource, assets: list[str], window: int
+    source: DataSource,
+    assets: list[str],
+    window: int,
+    max_workers: int = 16,
 ) -> dict[str, MarketData]:
-    """Fetch a snapshot for every asset in the universe.
+    """Fetch a snapshot for every asset in the universe, in parallel.
+
+    Per-asset fetches go through a thread pool so wall-time is the slowest
+    single fetch, not the sum. Network I/O releases the GIL, so threads
+    are appropriate even though Python is GIL-bound on CPU work.
+
+    Thread safety: `HyperliquidSource` keeps an internal cache for the
+    shared `metaAndAssetCtxs` payload. On a cold cache, concurrent threads
+    may each issue the call (last write wins; no corruption). After the
+    first tick of a session the cache is warm and the redundancy goes
+    away.
 
     Args:
         source: any `DataSource` implementation.
         assets: market symbols to fetch.
         window: number of recent candles per asset.
+        max_workers: thread-pool size.
 
     Returns:
         Mapping of asset symbol to its `MarketData` snapshot.
     """
-    return {asset: source.fetch(asset, window) for asset in assets}
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        results = pool.map(lambda a: (a, source.fetch(a, window)), assets)
+        return dict(results)
 
 
 # ---------------------------------------------------------------------------
