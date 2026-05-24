@@ -77,3 +77,63 @@ class Forecast:
     p_down: float
     expected_move_bps: float
     confidence: float
+
+
+@dataclass(frozen=True, slots=True)
+class FeeSchedule:
+    """venue fee and slippage parameters used by ``CostModel``.
+
+    Defaults are the Hyperliquid base tier (maker 1.5 bps / taker 4.5 bps,
+    hourly funding cadence). ``slippage_k`` is the dimensionless constant in
+    the sqrt-law impact formula ``impact ≈ k · √(notional/depth)``; default
+    ``0.5`` is a working baseline that must be calibrated against actual fills
+    before any number leaves the lab. ``flat_slippage_bps`` is the
+    conservative per-side fallback applied when ``MarketData.book_depth`` is
+    unavailable.
+
+    Attributes:
+        maker_bps: maker fee in basis points of notional.
+        taker_bps: taker fee in basis points of notional.
+        funding_period_hours: cadence at which the venue settles funding.
+        slippage_k: dimensionless slope of the sqrt-law impact model.
+        flat_slippage_bps: per-side fallback slippage when depth is missing.
+    """
+
+    maker_bps: float = 1.5
+    taker_bps: float = 4.5
+    funding_period_hours: float = 1.0
+    slippage_k: float = 0.5
+    flat_slippage_bps: float = 30.0
+
+
+@dataclass(frozen=True, slots=True)
+class CostAssessment:
+    """round-trip cost breakdown for one candidate trade.
+
+    All ``*_bps`` fields are in basis points of ``notional``. Each leg is
+    already round-trip (entry + exit), so ``round_trip_bps`` is just the sum
+    of the three legs. ``edge_after_cost_bps`` is the forecast's gross move
+    in the trade's direction minus ``round_trip_bps``. ``is_tradeable`` is a
+    convenience flag — the real go/no-go gate is L5 risk.
+
+    Attributes:
+        asset: market symbol.
+        notional: trade size in quote currency.
+        fee_bps: round-trip taker fee.
+        slippage_bps: round-trip slippage (sqrt-law or flat fallback).
+        funding_bps: signed funding over the hold; positive = cost to us.
+        round_trip_bps: ``fee_bps + slippage_bps + funding_bps``.
+        breakeven_bps: gross move needed to overcome the round-trip cost.
+        edge_after_cost_bps: signed expected move minus round-trip cost.
+        is_tradeable: ``True`` iff ``edge_after_cost_bps`` is positive.
+    """
+
+    asset: str
+    notional: float
+    fee_bps: float
+    slippage_bps: float
+    funding_bps: float
+    round_trip_bps: float
+    breakeven_bps: float
+    edge_after_cost_bps: float
+    is_tradeable: bool
