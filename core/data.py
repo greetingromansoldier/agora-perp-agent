@@ -9,6 +9,7 @@ runs live and offline.
 from __future__ import annotations
 
 import csv as _csv
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Protocol
@@ -149,6 +150,7 @@ class HyperliquidSource:
         interval: str = "1m",
         timeout_s: float = 10.0,
         band_bps: float = 50.0,
+        meta_ttl_s: float = 2.0,
     ) -> None:
         """Configure the candle interval, request timeout, and depth band.
 
@@ -157,6 +159,10 @@ class HyperliquidSource:
             timeout_s: per-request timeout in seconds.
             band_bps: half-width of the price band (in bps of mid) used to
                 aggregate L2 book notional into ``MarketData.book_depth``.
+            meta_ttl_s: how long to reuse the cached ``metaAndAssetCtxs``
+                payload across calls. The payload covers the whole HL
+                universe, so caching it amortises one POST across an
+                N-coin board fetch. Set to ``0`` to disable caching.
 
         Raises:
             ValueError: if ``interval`` is not supported.
@@ -169,6 +175,8 @@ class HyperliquidSource:
         self._interval = interval
         self._timeout_s = timeout_s
         self._band_bps = band_bps
+        self._meta_ttl_s = meta_ttl_s
+        self._meta_cache: tuple[float, object] | None = None
 
     def fetch(self, asset: str, window: int) -> MarketData:
         """Fetch live candles, mark, funding, and book depth for one asset.
@@ -203,7 +211,7 @@ class HyperliquidSource:
         if not bars:
             raise ValueError(f"No candles returned for `{asset}`.")
 
-        mark, funding = self._parse_ctx(self._post({"type": "metaAndAssetCtxs"}), asset)
+        mark, funding = self._parse_ctx(self._meta(), asset)
 
         bids, asks = self._parse_l2book(self._post({"type": "l2Book", "coin": asset}))
         mid = 0.5 * (bids[0][0] + asks[0][0]) if bids and asks else mark
@@ -226,6 +234,25 @@ class HyperliquidSource:
         resp = httpx.post(HYPERLIQUID_INFO_URL, json=body, timeout=self._timeout_s)
         resp.raise_for_status()
         return resp.json()
+
+    def _meta(self) -> object:
+        """Return the latest ``metaAndAssetCtxs`` payload, cached briefly.
+
+        The payload covers the whole HL universe, so when ``fetch_board``
+        loops over N coins we don't want N POSTs for it. A short TTL keeps
+        funding/mark within seconds of live while amortising the request.
+        """
+        now = time.monotonic()
+        cache = self._meta_cache
+        if (
+            cache is not None
+            and self._meta_ttl_s > 0.0
+            and now - cache[0] < self._meta_ttl_s
+        ):
+            return cache[1]
+        payload = self._post({"type": "metaAndAssetCtxs"})
+        self._meta_cache = (now, payload)
+        return payload
 
     @staticmethod
     def _parse_candles(raw: object) -> tuple[OhlcBar, ...]:

@@ -145,3 +145,32 @@ def test_compute_depth_handles_empty_sides():
     depth = HyperliquidSource._compute_depth(empty, asks, mid=100.0, band_bps=100.0)
     # bid side contributes 0, ask side contributes (100.5 + 101.0) × 0.5; avg / 2
     assert depth == pytest.approx(0.5 * (100.5 * 0.5 + 101.0 * 0.5), rel=1e-12)
+
+
+def test_meta_cache_amortises_repeated_calls():
+    src = HyperliquidSource(meta_ttl_s=60.0)
+    calls = {"n": 0}
+
+    def fake_post(body):
+        calls["n"] += 1
+        return _META_CTX
+
+    src._post = fake_post  # type: ignore[method-assign]
+    src._meta()
+    src._meta()
+    src._meta()
+    assert calls["n"] == 1  # cached after first call
+
+
+def test_meta_cache_disabled_when_ttl_zero():
+    src = HyperliquidSource(meta_ttl_s=0.0)
+    calls = {"n": 0}
+
+    def fake_post(body):
+        calls["n"] += 1
+        return _META_CTX
+
+    src._post = fake_post  # type: ignore[method-assign]
+    src._meta()
+    src._meta()
+    assert calls["n"] == 2  # no caching with ttl=0
