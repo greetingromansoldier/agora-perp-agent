@@ -185,7 +185,7 @@ class GeminiSynthesizer:
         self,
         model: str | None = None,
         api_key_env: str = "GEMINI_API_KEY",
-        max_output_tokens: int = 4_096,
+        max_output_tokens: int = 16_384,
         system_prompt: str | None = None,
     ) -> None:
         """Create the Gemini client; raise if the API key is missing.
