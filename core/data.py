@@ -9,6 +9,7 @@ runs live and offline.
 from __future__ import annotations
 
 import csv as _csv
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -195,6 +196,7 @@ class HyperliquidSource:
         self._band_bps = band_bps
         self._meta_ttl_s = meta_ttl_s
         self._meta_cache: tuple[float, object] | None = None
+        self._meta_lock = threading.Lock()
 
     def fetch(self, asset: str, window: int) -> MarketData:
         """Fetch live candles, mark, funding, and book depth for one asset.
@@ -256,9 +258,11 @@ class HyperliquidSource:
     def _meta(self) -> object:
         """Return the latest ``metaAndAssetCtxs`` payload, cached briefly.
 
-        The payload covers the whole HL universe, so when ``fetch_board``
-        loops over N coins we don't want N POSTs for it. A short TTL keeps
-        funding/mark within seconds of live while amortising the request.
+        Cached behind a lock so concurrent ``fetch_board`` threads do not
+        all hit the network on a cache miss (the payload is ~70 KB and
+        each call is ~1 s — a thundering herd of 10 parallel coins would
+        cost 10× the necessary load). Double-checked locking: fast path
+        when the cache is warm, lock only when refreshing.
         """
         now = time.monotonic()
         cache = self._meta_cache
@@ -268,9 +272,19 @@ class HyperliquidSource:
             and now - cache[0] < self._meta_ttl_s
         ):
             return cache[1]
-        payload = self._post({"type": "metaAndAssetCtxs"})
-        self._meta_cache = (now, payload)
-        return payload
+        with self._meta_lock:
+            # Re-check; another thread may have refreshed while we waited.
+            now = time.monotonic()
+            cache = self._meta_cache
+            if (
+                cache is not None
+                and self._meta_ttl_s > 0.0
+                and now - cache[0] < self._meta_ttl_s
+            ):
+                return cache[1]
+            payload = self._post({"type": "metaAndAssetCtxs"})
+            self._meta_cache = (time.monotonic(), payload)
+            return payload
 
     @staticmethod
     def _parse_candles(raw: object) -> tuple[OhlcBar, ...]:
