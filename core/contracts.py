@@ -282,3 +282,44 @@ class Fill:
     fee_paid_usd: float
     is_open: bool
     realized_pnl_usd: float = 0.0
+
+
+@dataclass(frozen=True, slots=True)
+class RiskConfig:
+    """deterministic limits applied by `RiskGate` before each open.
+
+    Defaults are paper-trader-conservative — they prevent the demo from
+    blowing up but are not calibrated against real risk capacity. Tune per
+    deployment.
+
+    Attributes:
+        max_positions: hard cap on the count of concurrent open positions.
+        min_edge_after_cost_bps: candidates with edge below this are vetoed.
+        max_notional_per_position_usd: per-position notional ceiling.
+        max_total_exposure_usd: ceiling on the sum of mark-priced open notional.
+    """
+
+    max_positions: int = 3
+    min_edge_after_cost_bps: float = 0.0
+    max_notional_per_position_usd: float = 1_000_000.0
+    max_total_exposure_usd: float = 5_000_000.0
+
+
+@dataclass(frozen=True, slots=True)
+class RiskVerdict:
+    """outcome of running an `AllocationCandidate` through `RiskGate`.
+
+    `reason` is a short, human-readable string for the trace log: ``"ok"``
+    on approval, or a description of the rule that fired on veto.
+    `adjusted_size` is reserved for future proportional sizing; at MVP it
+    is always ``None`` (callers should use ``candidate.notional`` unchanged).
+
+    Attributes:
+        approved: True iff every risk rule passed.
+        reason: rationale string for the trace log.
+        adjusted_size: optional size override; ``None`` at MVP.
+    """
+
+    approved: bool
+    reason: str
+    adjusted_size: float | None = None
