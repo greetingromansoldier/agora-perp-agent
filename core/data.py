@@ -54,14 +54,13 @@ def fetch_board(
     """Fetch a snapshot for every asset in the universe, in parallel.
 
     Per-asset fetches go through a thread pool so wall-time is the slowest
-    single fetch, not the sum. Network I/O releases the GIL, so threads
-    are appropriate even though Python is GIL-bound on CPU work.
+    single fetch, not the sum. Each per-coin failure is **isolated**: a
+    rate-limit or timeout on one asset does not poison the whole batch.
+    The caller sees the failed asset as a missing key in the result dict.
 
-    Thread safety: `HyperliquidSource` keeps an internal cache for the
-    shared `metaAndAssetCtxs` payload. On a cold cache, concurrent threads
-    may each issue the call (last write wins; no corruption). After the
-    first tick of a session the cache is warm and the redundancy goes
-    away.
+    Thread safety: `HyperliquidSource` keeps an internal lock around its
+    `metaAndAssetCtxs` cache, so concurrent threads serialise the refresh
+    on a cache miss instead of stampeding the network.
 
     Args:
         source: any `DataSource` implementation.
@@ -70,13 +69,24 @@ def fetch_board(
         max_workers: thread-pool size.
 
     Returns:
-        Mapping of asset symbol to its `MarketData` snapshot.
+        Mapping of asset symbol to its `MarketData` snapshot. Coins whose
+        fetch failed are absent from the result; the caller can detect
+        them by checking which requested assets are missing.
     """
     from concurrent.futures import ThreadPoolExecutor
 
+    def _safe_fetch(asset: str) -> tuple[str, MarketData | None]:
+        try:
+            return asset, source.fetch(asset, window)
+        except Exception:  # noqa: BLE001
+            return asset, None
+
+    out: dict[str, MarketData] = {}
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        results = pool.map(lambda a: (a, source.fetch(a, window)), assets)
-        return dict(results)
+        for asset, md in pool.map(_safe_fetch, assets):
+            if md is not None:
+                out[asset] = md
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -247,13 +257,28 @@ class HyperliquidSource:
         )
 
     def _post(self, body: dict) -> object:
+        """POST to HL `/info` with exponential backoff on 429 rate-limits.
+
+        We retry up to twice on HTTP 429 with 0.5s and 1.0s sleeps; any
+        other error (or persistent 429) propagates. This is enough to
+        ride out HL's typical bursty throttling without hiding genuine
+        outages.
+        """
         # Lazy import so the module (and CSV path / parsing tests) does not
         # require httpx to be installed.
         import httpx
 
-        resp = httpx.post(HYPERLIQUID_INFO_URL, json=body, timeout=self._timeout_s)
-        resp.raise_for_status()
-        return resp.json()
+        for attempt in range(3):
+            resp = httpx.post(
+                HYPERLIQUID_INFO_URL, json=body, timeout=self._timeout_s
+            )
+            if resp.status_code == 429 and attempt < 2:
+                time.sleep(0.5 * (attempt + 1))
+                continue
+            resp.raise_for_status()
+            return resp.json()
+        # Unreachable — the loop either returns or raises above.
+        raise RuntimeError("unreachable")
 
     def _meta(self) -> object:
         """Return the latest ``metaAndAssetCtxs`` payload, cached briefly.
