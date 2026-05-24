@@ -83,7 +83,12 @@ class HyperliquidWsSource:
         self._lock = threading.Lock()
         self._stop = threading.Event()
         self._ready = threading.Event()
-        self._rest = HyperliquidSource(interval=interval, band_bps=band_bps)
+        # Long meta TTL — the background poll keeps it fresh, so `fetch()`
+        # always reads from cache. Set well above the poll period so the
+        # cache never goes stale in the gap between background refreshes.
+        self._rest = HyperliquidSource(
+            interval=interval, band_bps=band_bps, meta_ttl_s=10.0
+        )
         self._thread = threading.Thread(
             target=self._run, daemon=True, name="hl-ws"
         )
@@ -242,7 +247,7 @@ class HyperliquidWsSource:
                 await asyncio.to_thread(self._rest._meta)
             except Exception as e:  # noqa: BLE001
                 print(f"[meta poll] {e}", file=sys.stderr)
-            await asyncio.sleep(1.5)
+            await asyncio.sleep(2.0)
 
     async def _readiness_watcher(self) -> None:
         """Set the `ready` event once every coin cache has bars + book."""
