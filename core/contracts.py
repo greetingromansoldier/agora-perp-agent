@@ -137,3 +137,30 @@ class CostAssessment:
     breakeven_bps: float
     edge_after_cost_bps: float
     is_tradeable: bool
+
+
+@dataclass(frozen=True, slots=True)
+class AllocationCandidate:
+    """one ranked trade idea from `allocate()`.
+
+    Carries the trade's direction and intended size alongside the inputs
+    that justified it (`forecast`, `cost`) and its rank in the board (0 =
+    best). It is a *proposed* trade — the risk gate and the LLM agent still
+    get to veto or override.
+
+    Attributes:
+        asset: market symbol.
+        side: ``"long"`` or ``"short"``, derived from the forecast.
+        notional: intended trade size (same as the value the cost model
+            was evaluated at).
+        forecast: the directional view that drove the candidate.
+        cost: the cost assessment for ``notional`` on this snapshot.
+        rank: position in the ranked board, 0-indexed; 0 = best edge.
+    """
+
+    asset: str
+    side: str
+    notional: float
+    forecast: Forecast
+    cost: CostAssessment
+    rank: int
