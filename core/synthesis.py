@@ -166,7 +166,7 @@ class GeminiSynthesizer:
     private repo and is injected by replacing `SYSTEM_PROMPT` at runtime.
     """
 
-    DEFAULT_MODEL = "gemini-3-1-pro"
+    DEFAULT_MODEL = "gemini-3.1-pro-preview"
     SYSTEM_PROMPT = (
         "You are an autonomous perpetual-futures trading agent on Hyperliquid.\n"
         "Every tick you receive the full board (every coin we scanned), the "
