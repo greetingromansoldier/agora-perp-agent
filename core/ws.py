@@ -170,7 +170,7 @@ class HyperliquidWsSource:
             {"enableRateLimit": True, "options": {"defaultType": "swap"}}
         )
         try:
-            await exchange.load_markets()
+            await self._load_markets_with_retry(exchange)
 
             tasks: list[asyncio.Task] = []
             symbols: dict[str, str] = {}
@@ -195,6 +195,36 @@ class HyperliquidWsSource:
             await asyncio.gather(*tasks, return_exceptions=True)
         finally:
             await exchange.close()
+
+    async def _load_markets_with_retry(
+        self, exchange, attempts: int = 6, initial_delay_s: float = 2.0
+    ) -> None:
+        """Call `exchange.load_markets()` with backoff on rate-limits.
+
+        HL throttles aggressively after any heavy REST polling; the very
+        first WS-source bootstrap can land mid-throttle. We retry with
+        an expanding delay so the cool-off window can pass.
+        """
+        delay = initial_delay_s
+        last_err: Exception | None = None
+        for i in range(attempts):
+            try:
+                await exchange.load_markets()
+                return
+            except Exception as e:  # noqa: BLE001
+                last_err = e
+                if "429" in str(e) or "Too Many Requests" in str(e):
+                    print(
+                        f"[ws bootstrap] load_markets 429, retry {i + 1}/{attempts} "
+                        f"in {delay:.1f}s",
+                        file=sys.stderr,
+                    )
+                    await asyncio.sleep(delay)
+                    delay = min(delay * 1.6, 30.0)
+                    continue
+                raise
+        if last_err is not None:
+            raise last_err
 
     async def _readiness_watcher(self) -> None:
         """Set the `ready` event once every coin cache has bars + book."""
