@@ -186,13 +186,16 @@ class GeminiSynthesizer:
         model: str | None = None,
         api_key_env: str = "GEMINI_API_KEY",
         max_output_tokens: int = 4_096,
+        system_prompt: str | None = None,
     ) -> None:
         """Create the Gemini client; raise if the API key is missing.
 
         Args:
-            model: Gemini model id (default ``"gemini-3-1-pro"``).
+            model: Gemini model id (default ``"gemini-3.1-pro-preview"``).
             api_key_env: env var name holding the API key.
             max_output_tokens: cap on the response size.
+            system_prompt: override the default honest-mode system prompt
+                with a custom one (e.g. an exploration / demo prompt).
 
         Raises:
             RuntimeError: if ``api_key_env`` is not set in the environment
@@ -214,6 +217,7 @@ class GeminiSynthesizer:
         self._client = genai.Client(api_key=api_key)
         self._model = model or self.DEFAULT_MODEL
         self._max_output_tokens = max_output_tokens
+        self._system_prompt = system_prompt or self.SYSTEM_PROMPT
         self._counter = 0
 
     def decide(self, state: AgentState) -> Decisions:
@@ -236,7 +240,7 @@ class GeminiSynthesizer:
         config = gtypes.GenerateContentConfig(
             response_mime_type="application/json",
             max_output_tokens=self._max_output_tokens,
-            system_instruction=self.SYSTEM_PROMPT,
+            system_instruction=self._system_prompt,
         )
         response = self._client.models.generate_content(
             model=self._model,
