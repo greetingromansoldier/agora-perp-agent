@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>agora-perp-agent — verifiable AI perp trader on Arc</title>
+    <meta
+      name="description"
+      content="Autonomous AI trading agent for crypto perpetuals. Every decision is anchored on Arc testnet via ERC-8183 so the track record is independently verifiable on-chain."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E%E2%97%89%3C/text%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="brand">
+          <span class="dot">◉</span>
+          <h1>agora-perp-agent</h1>
+          <span class="chip">arc testnet</span>
+        </div>
+        <p class="tagline">
+          Autonomous AI trading agent for crypto perpetuals. Every decision
+          anchored on Arc via ERC-8183 — track record is independently
+          verifiable on-chain.
+        </p>
+        <nav>
+          <a href="https://github.com/greetingromansoldier/agora-perp-agent" target="_blank" rel="noopener">github</a>
+          <a id="wallet-link" href="#" target="_blank" rel="noopener">wallet</a>
+          <a id="contract-link" href="#" target="_blank" rel="noopener">erc-8183</a>
+          <a href="https://eips.ethereum.org/EIPS/eip-8183" target="_blank" rel="noopener">spec</a>
+        </nav>
+      </header>
+
+      <section class="stats">
+        <div class="stat">
+          <span class="label">equity</span>
+          <span class="value" id="stat-equity">…</span>
+        </div>
+        <div class="stat">
+          <span class="label">realized pnl</span>
+          <span class="value" id="stat-realized">…</span>
+        </div>
+        <div class="stat">
+          <span class="label">open positions</span>
+          <span class="value" id="stat-open">…</span>
+        </div>
+        <div class="stat">
+          <span class="label">on-chain anchors</span>
+          <span class="value" id="stat-anchors">…</span>
+        </div>
+        <div class="stat">
+          <span class="label">agent wallet</span>
+          <a class="value mono" id="stat-wallet" href="#" target="_blank">…</a>
+        </div>
+        <div class="stat">
+          <span class="label">last update</span>
+          <span class="value" id="stat-updated">…</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Equity curve</h2>
+        <p class="muted">
+          Paper-trading equity over the current session. Starting balance
+          is the dashed reference line. Hydrated from
+          <code>dashboard/data/snapshot.json</code>, written by the running
+          agent every few seconds.
+        </p>
+        <div class="equity-wrap" id="equity-wrap">
+          <svg id="equity-chart" viewBox="0 0 800 200" preserveAspectRatio="none"></svg>
+          <div class="equity-meta">
+            <span class="muted" id="equity-meta-left">…</span>
+            <span class="muted" id="equity-meta-right">…</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Open positions</h2>
+        <p class="muted">
+          Paper positions sized by the L5.5 layer (tier × regime × ATR
+          stop × 3-cap leverage). Each row carries an on-chain anchor
+          link if the open was anchored.
+        </p>
+        <div class="table-wrap">
+          <table id="positions">
+            <thead>
+              <tr>
+                <th>coin</th>
+                <th>side</th>
+                <th>lev</th>
+                <th>qty</th>
+                <th>mark</th>
+                <th>stop</th>
+                <th>take</th>
+                <th>pnl</th>
+                <th>regime</th>
+                <th>tx</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="placeholder">
+                <td colspan="10">(no open positions)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Recent decisions</h2>
+        <p class="muted">
+          LLM rationale + sizing breakdown for each EXECUTE action. The
+          on-chain anchor pins the keccak256 of the audit record to
+          this exact decision; click the tx link to verify.
+        </p>
+        <div class="decisions" id="decisions">
+          <div class="placeholder muted">(no decisions yet)</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Trade history</h2>
+        <p class="muted">
+          Closed positions with realized PnL. Continuous across runs —
+          hydrated from the audit sqlite store.
+        </p>
+        <div class="table-wrap">
+          <table id="history">
+            <thead>
+              <tr>
+                <th>closed</th>
+                <th>coin</th>
+                <th>side</th>
+                <th>qty</th>
+                <th>entry</th>
+                <th>exit</th>
+                <th>pnl</th>
+                <th>regime</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="placeholder">
+                <td colspan="8">(no closed trades yet)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Live anchor feed</h2>
+        <p class="muted">
+          Every row is one decision the agent committed to Arc. Click an
+          arcscan link to inspect the transaction directly on-chain.
+          <code>description</code> holds <code>agora:&lt;audit_id&gt;:&lt;keccak256(record||nonce)&gt;</code>
+          — the audit-record anchor hash. The off-chain record is reproducible
+          from the same nonce.
+        </p>
+        <div class="table-wrap">
+          <table id="feed">
+            <thead>
+              <tr>
+                <th>when</th>
+                <th>audit id</th>
+                <th>anchor hash</th>
+                <th>tx</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="placeholder">
+                <td colspan="4">loading anchors from Arc…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>How a decision becomes an anchor</h2>
+        <pre><code>data (WS L2 + 5m candles + funding)
+   ↓
+forecast (logistic over ATR/EMA/SMA/RSI/ADX/realized-vol)
+   ↓
+cost (fees + sqrt-law slippage + signed funding)
+   ↓
+allocate (rank by edge after cost)
+   ↓
+LLM agent (Gemini 3.1 Pro)
+   ↓
+sizing layer
+   |  classify_tier → 3-axis regime tag → playbook multiplier
+   |  → vol target → ATR stops → 3-cap leverage → funding drag
+   ↓
+risk gate (veto)
+   ↓
+SimExecutor.open_sized
+   ↓
+audit record  (keccak256 + nonce, sqlite write-ahead)
+   ↓
+ERC-8183 createJob via Circle's Contract Execution API
+   ↓
+tx_hash on Arc  ←  you are looking at it now</code></pre>
+      </section>
+
+      <section>
+        <h2>Why this design</h2>
+        <ul class="reasons">
+          <li>
+            <strong>The math is honest, the LLM is the consultant.</strong>
+            Sizing, leverage, stops, and PnL are pure deterministic Python —
+            no model hallucination touches a number. The LLM picks
+            <em>which</em> trades to take and explains <em>why</em>; it
+            never picks <em>how big</em>.
+          </li>
+          <li>
+            <strong>Decisions are verifiable.</strong> The keccak256 anchor
+            commits to the exact state (market snapshot, forecast, cost
+            assessment, sizing inputs) the call was made on. Anyone with the
+            off-chain record can prove or disprove that we made the call at
+            that block.
+          </li>
+          <li>
+            <strong>Settlement is cheap.</strong> Arc denominates gas in
+            USDC and fees are micro-cents per anchor. Circle's MPC custody
+            signs every transaction — no private key in the agent process.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Stack</h2>
+        <ul class="stack">
+          <li><span class="badge">Arc</span> Circle's L1, USDC-as-gas, sub-second finality</li>
+          <li><span class="badge">Circle Wallets</span> Developer-Controlled, MPC custody</li>
+          <li><span class="badge">ERC-8183</span> commerce framework, decision anchor</li>
+          <li><span class="badge">Hyperliquid</span> public feeds for market data</li>
+          <li><span class="badge">Gemini 3.1 Pro</span> LLM agent</li>
+          <li><span class="badge">Python 3.12 / uv</span> engine, async loop, sqlite audit</li>
+        </ul>
+      </section>
+
+      <footer>
+        <p>
+          built for the Agora Agents Hackathon (Canteen × Circle × Arc, May
+          2026) · MIT license ·
+          <a href="https://github.com/greetingromansoldier/agora-perp-agent">source</a>
+        </p>
+      </footer>
+    </main>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
