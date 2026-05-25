@@ -531,7 +531,16 @@ td.when {
 td.audit {
   color: var(--fg-muted);
   word-break: break-all;
-  max-width: 200px;
+  max-width: 260px;
+}
+
+.row-sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--fg-dim);
+  margin-top: 3px;
+  word-break: break-word;
+  letter-spacing: -0.01em;
 }
 
 /* ---------------------------------------------------------- reasons */

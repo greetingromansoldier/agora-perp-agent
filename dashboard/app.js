@@ -86,14 +86,34 @@ function decodeCreateJobDescription(rawInput) {
 }
 
 /**
- * Parse our description string `"agora:<audit_id>:0x<hash>"` into parts.
- * Returns `{auditId, anchorHash}` or null on a non-matching string.
+ * Parse the on-chain description string. Two formats supported:
+ *
+ *   v1 (legacy):
+ *     "agora:<audit_id_36>:0x<hash_64>"
+ *
+ *   v2 (current, human-readable):
+ *     "agora|<short_id_8>|<ASSET>|<L|S>|<qty>@<lev>x|$<notional>|<tier>|
+ *      <regime>|stop=<stop> take=<take>|hash=0x<hash_64>"
+ *
+ * Returns `{auditId, anchorHash, summary?}` or null on no match. The
+ * `summary` field is the trade context extracted from v2; null for v1.
  */
 function parseDescription(desc) {
   if (!desc) return null;
-  const match = desc.match(/^agora:([0-9a-f-]{36}):(0x[0-9a-f]{64})$/i);
-  if (!match) return null;
-  return { auditId: match[1], anchorHash: match[2] };
+  // v1 — legacy colon format
+  let m = desc.match(/^agora:([0-9a-f-]{36}):(0x[0-9a-f]{64})$/i);
+  if (m) return { auditId: m[1], anchorHash: m[2], summary: null };
+  // v2 — pipe format. audit_id is the second field; hash is at the end.
+  if (!desc.startsWith("agora|")) return null;
+  const parts = desc.split("|");
+  if (parts.length < 2) return null;
+  const shortId = parts[1];
+  const hashPart = parts[parts.length - 1] || "";
+  const hashMatch = hashPart.match(/hash=(0x[0-9a-f]{64})/i);
+  const anchorHash = hashMatch ? hashMatch[1] : null;
+  // Build a compact summary line from the middle pipe fields.
+  const summary = parts.slice(2, -1).join(" · ");
+  return { auditId: shortId, anchorHash, summary };
 }
 
 // ---------------------------------------------------------------- format
@@ -157,8 +177,11 @@ function renderRows(rows) {
   tbody.innerHTML = rows
     .map((r) => {
       const txUrl = `https://testnet.arcscan.app/tx/${r.txHash}`;
+      const auditLabel = r.auditId
+        ? (r.auditId.length > 12 ? abbreviate(r.auditId, 8, 4) : r.auditId)
+        : "";
       const audit = r.auditId
-        ? `<code title="${r.auditId}">${abbreviate(r.auditId, 8, 4)}</code>`
+        ? `<code title="${r.auditId}">${auditLabel}</code>${r.summary ? `<div class="row-sub">${escapeHtml(r.summary)}</div>` : ""}`
         : `<span class="muted">—</span>`;
       const hash = r.anchorHash
         ? `<span title="${r.anchorHash}">${abbreviate(r.anchorHash, 10, 6)}</span>`
@@ -201,6 +224,7 @@ async function refresh() {
           description: desc,
           auditId: parsed?.auditId || null,
           anchorHash: parsed?.anchorHash || null,
+          summary: parsed?.summary || null,
         };
       })
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));

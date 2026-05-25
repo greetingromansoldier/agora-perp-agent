@@ -39,8 +39,8 @@ audit.sqlite-wal
 # Local config overrides
 configs/*.local.json
 
-# Generated data
-data/
-!data/.gitkeep
-output/
-!output/.gitkeep
+# Generated data (top-level only — does NOT match dashboard/data/).
+/data/
+!/data/.gitkeep
+/output/
+!/output/.gitkeep

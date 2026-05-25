@@ -124,6 +124,11 @@ class AutoPusher:
             self._git(*push_args)
             self._last_push_at = time.time()
             self._last_status = f"pushed at {ts}"
+            # Surface to the operator — silent auto-pushers are the worst
+            # kind of "is this working?" bug. One short line per push so
+            # the run-stream visibly confirms the snapshot is reaching
+            # github.
+            print(f"[auto-pusher] pushed snapshot at {ts}", file=sys.stderr)
         except subprocess.CalledProcessError as e:
             self._last_status = f"git error: {e}"
             print(f"[auto-pusher] {self._last_status}", file=sys.stderr)
