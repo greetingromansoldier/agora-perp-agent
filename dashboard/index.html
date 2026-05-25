@@ -179,66 +179,182 @@
 
       <section>
         <h2>How a decision becomes an anchor</h2>
-        <pre><code>data (WS L2 + 5m candles + funding)
-   ↓
-forecast (logistic over ATR/EMA/SMA/RSI/ADX/realized-vol)
-   ↓
-cost (fees + sqrt-law slippage + signed funding)
-   ↓
-allocate (rank by edge after cost)
-   ↓
-LLM agent (Gemini 3.1 Pro)
-   ↓
-sizing layer
-   |  classify_tier → 3-axis regime tag → playbook multiplier
-   |  → vol target → ATR stops → 3-cap leverage → funding drag
-   ↓
-risk gate (veto)
-   ↓
-SimExecutor.open_sized
-   ↓
-audit record  (keccak256 + nonce, sqlite write-ahead)
-   ↓
-ERC-8183 createJob via Circle's Contract Execution API
-   ↓
-tx_hash on Arc  ←  you are looking at it now</code></pre>
+        <div class="pipeline">
+          <!-- ============================ SENSE ============================ -->
+          <div class="phase phase-sense">
+            <div class="phase-header">
+              <span class="phase-glyph">◆</span>
+              <span class="phase-label">SENSE</span>
+              <span class="phase-tag">live market state</span>
+            </div>
+            <div class="step">
+              <span class="step-num">01</span>
+              <div class="step-body">
+                <div class="step-title">data</div>
+                <div class="step-desc">L2 order book + 5-minute candles + funding rate streamed from Hyperliquid over WebSocket</div>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-num">02</span>
+              <div class="step-body">
+                <div class="step-title">forecast</div>
+                <div class="step-desc">Logistic classifier over ATR · EMA · SMA · RSI · ADX · realized-vol</div>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-num">03</span>
+              <div class="step-body">
+                <div class="step-title">cost</div>
+                <div class="step-desc">Fees + sqrt-law slippage + signed funding for the expected hold horizon</div>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-num">04</span>
+              <div class="step-body">
+                <div class="step-title">allocate</div>
+                <div class="step-desc">Rank candidates by edge after cost; only positive edge survives</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- =========================== DECIDE ============================ -->
+          <div class="phase phase-decide">
+            <div class="phase-header">
+              <span class="phase-glyph">▲</span>
+              <span class="phase-label">DECIDE</span>
+              <span class="phase-tag">LLM + deterministic math</span>
+            </div>
+            <div class="step">
+              <span class="step-num">05</span>
+              <div class="step-body">
+                <div class="step-title">LLM agent</div>
+                <div class="step-desc">Gemini 3.1 Pro reads the board, picks <em>which</em> to trade and explains <em>why</em>. Never picks <em>how big</em>.</div>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-num">06</span>
+              <div class="step-body">
+                <div class="step-title">sizing</div>
+                <div class="step-desc"><code>classify_tier</code> → 3-axis regime → playbook multiplier → vol target → ATR stops → 3-cap leverage → funding-drag check</div>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-num">07</span>
+              <div class="step-body">
+                <div class="step-title">risk gate</div>
+                <div class="step-desc">5-rule veto: edge floor, uniqueness, max positions, per-position cap, total exposure</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- =========================== COMMIT ============================ -->
+          <div class="phase phase-commit">
+            <div class="phase-header">
+              <span class="phase-glyph">●</span>
+              <span class="phase-label">COMMIT</span>
+              <span class="phase-tag">verifiable on Arc</span>
+            </div>
+            <div class="step">
+              <span class="step-num">08</span>
+              <div class="step-body">
+                <div class="step-title">paper execute</div>
+                <div class="step-desc"><code>SimExecutor.open_sized</code> registers stop / take on the position; <code>check_stops</code> fires every tick</div>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-num">09</span>
+              <div class="step-body">
+                <div class="step-title">audit record</div>
+                <div class="step-desc">keccak256(canonical_json + nonce) → sqlite write-ahead, before any external effect</div>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-num">10</span>
+              <div class="step-body">
+                <div class="step-title">on-chain anchor</div>
+                <div class="step-desc">ERC-8183 <code>createJob</code> via Circle's Contract Execution API. Hash lives in the on-chain description.</div>
+              </div>
+            </div>
+            <div class="step step-final">
+              <span class="step-num">11</span>
+              <div class="step-body">
+                <div class="step-title">tx_hash on Arc <span class="pulse">live</span></div>
+                <div class="step-desc">arcscan link in the decision feed and the open positions table — click to verify</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section>
         <h2>Why this design</h2>
-        <ul class="reasons">
-          <li>
-            <strong>The math is honest, the LLM is the consultant.</strong>
-            Sizing, leverage, stops, and PnL are pure deterministic Python —
-            no model hallucination touches a number. The LLM picks
-            <em>which</em> trades to take and explains <em>why</em>; it
-            never picks <em>how big</em>.
-          </li>
-          <li>
-            <strong>Decisions are verifiable.</strong> The keccak256 anchor
-            commits to the exact state (market snapshot, forecast, cost
-            assessment, sizing inputs) the call was made on. Anyone with the
-            off-chain record can prove or disprove that we made the call at
-            that block.
-          </li>
-          <li>
-            <strong>Settlement is cheap.</strong> Arc denominates gas in
-            USDC and fees are micro-cents per anchor. Circle's MPC custody
-            signs every transaction — no private key in the agent process.
-          </li>
-        </ul>
+        <div class="reasons">
+          <div class="reason reason-math">
+            <div class="reason-icon">∑</div>
+            <div class="reason-body">
+              <div class="reason-title">The math is honest, the LLM is the consultant.</div>
+              <p>
+                Sizing, leverage, stops, and PnL are pure deterministic
+                Python — no model hallucination touches a number. The LLM
+                picks <em>which</em> trades to take and explains
+                <em>why</em>; it never picks <em>how big</em>.
+              </p>
+            </div>
+          </div>
+          <div class="reason reason-verify">
+            <div class="reason-icon">✓</div>
+            <div class="reason-body">
+              <div class="reason-title">Decisions are verifiable.</div>
+              <p>
+                The keccak256 anchor commits to the exact state — market
+                snapshot, forecast, cost assessment, sizing inputs — the
+                call was made on. Anyone with the off-chain record can
+                prove or disprove that we made the call at that block.
+              </p>
+            </div>
+          </div>
+          <div class="reason reason-cheap">
+            <div class="reason-icon">¢</div>
+            <div class="reason-body">
+              <div class="reason-title">Settlement is cheap.</div>
+              <p>
+                Arc denominates gas in USDC and fees are micro-cents per
+                anchor. Circle's MPC custody signs every transaction — no
+                private key is ever held by the agent process.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section>
         <h2>Stack</h2>
-        <ul class="stack">
-          <li><span class="badge">Arc</span> Circle's L1, USDC-as-gas, sub-second finality</li>
-          <li><span class="badge">Circle Wallets</span> Developer-Controlled, MPC custody</li>
-          <li><span class="badge">ERC-8183</span> commerce framework, decision anchor</li>
-          <li><span class="badge">Hyperliquid</span> public feeds for market data</li>
-          <li><span class="badge">Gemini 3.1 Pro</span> LLM agent</li>
-          <li><span class="badge">Python 3.12 / uv</span> engine, async loop, sqlite audit</li>
-        </ul>
+        <div class="stack">
+          <a class="stack-card stack-arc" href="https://docs.arc.io" target="_blank" rel="noopener">
+            <div class="stack-tag">Arc</div>
+            <div class="stack-line">Circle's L1, USDC-as-gas, sub-second finality</div>
+          </a>
+          <a class="stack-card stack-wallet" href="https://developers.circle.com/wallets" target="_blank" rel="noopener">
+            <div class="stack-tag">Circle Wallets</div>
+            <div class="stack-line">Developer-Controlled, MPC custody, no key in agent process</div>
+          </a>
+          <a class="stack-card stack-erc" href="https://eips.ethereum.org/EIPS/eip-8183" target="_blank" rel="noopener">
+            <div class="stack-tag">ERC-8183</div>
+            <div class="stack-line">Commerce framework, on-chain decision anchor</div>
+          </a>
+          <a class="stack-card stack-hl" href="https://hyperliquid.gitbook.io/hyperliquid-docs" target="_blank" rel="noopener">
+            <div class="stack-tag">Hyperliquid</div>
+            <div class="stack-line">Public WebSocket + REST market data</div>
+          </a>
+          <a class="stack-card stack-llm" href="https://aistudio.google.com" target="_blank" rel="noopener">
+            <div class="stack-tag">Gemini 3.1 Pro</div>
+            <div class="stack-line">LLM agent (rule-based fallback included)</div>
+          </a>
+          <a class="stack-card stack-py" href="https://docs.astral.sh/uv/" target="_blank" rel="noopener">
+            <div class="stack-tag">Python 3.12 + uv</div>
+            <div class="stack-line">Engine, async loop, sqlite audit, ccxt.pro streams</div>
+          </a>
+        </div>
       </section>
 
       <footer>
