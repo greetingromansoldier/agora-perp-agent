@@ -404,32 +404,47 @@ function renderPositions(positions) {
 /**
  * Render the unified activity feed: opens + closes interleaved.
  *
- * Each entry has an `action` field — "open" for new positions, "close"
- * for closures (with trigger ∈ {stop, take, cut, flip, manual}). Cards
- * are color-coded by action and show different info: opens show
- * sizing + LLM rationale, closes show realized PnL + held duration.
+ * Each row is a compact single-line summary. Click to expand the full
+ * detail (sizing breakdown, LLM rationale, full timestamps).
+ *
+ * Action verbs come from the trigger:
+ *   open                  → opened
+ *   close (trigger=stop)  → stopped
+ *   close (trigger=take)  → took profit
+ *   close (trigger=cut)   → cut
+ *   close (trigger=flip)  → flipped
+ *   close (trigger=other) → closed
  */
 function renderActivity(decisions) {
   const root = document.getElementById("decisions");
   if (!root) return;
-  if (!Array.isArray(decisions) || decisions.length === 0) {
+  const items = Array.isArray(decisions) ? decisions : [];
+  const countEl = document.getElementById("activity-count");
+  if (countEl) countEl.textContent = items.length.toString();
+  if (items.length === 0) {
     root.innerHTML = `<div class="placeholder muted">(no activity yet — agent is warming up)</div>`;
     return;
   }
-  root.innerHTML = decisions
-    .slice(0, 30)
-    .map(renderActivityItem)
-    .join("");
+  root.innerHTML = items.slice(0, 50).map(renderActivityItem).join("");
+
+  // Attach click handlers for expand/collapse.
+  root.querySelectorAll(".act").forEach((el) => {
+    el.addEventListener("click", (ev) => {
+      // Avoid toggling when the click landed on the arcscan link itself.
+      if (ev.target.closest("a")) return;
+      el.classList.toggle("expanded");
+    });
+  });
 }
 
 const VERB_LABELS = {
   open: "opened",
-  close: "closed",
-  stop: "stopped out",
+  stop: "stopped",
   take: "took profit",
-  cut: "cut by agent",
+  cut: "cut",
   flip: "flipped",
   manual: "closed",
+  close: "closed",
 };
 
 function renderActivityItem(d) {
@@ -437,72 +452,70 @@ function renderActivityItem(d) {
   const verbKey = isClose ? (d.trigger || "close") : "open";
   const verbLabel = VERB_LABELS[verbKey] || verbKey;
   const sideClass = d.side === "long" ? "act-side-long" : "act-side-short";
-  const sideLabel = (d.side || "").toUpperCase();
+  const sideLabel = d.side || "";
 
   const txLink = d.arc_tx_hash
-    ? `<a href="${d.arcscan_url || `https://testnet.arcscan.app/tx/${d.arc_tx_hash}`}" target="_blank" class="tx-link">verify on arc ${abbreviate(d.arc_tx_hash, 6, 4)} ↗</a>`
+    ? `<a href="${d.arcscan_url || `https://testnet.arcscan.app/tx/${d.arc_tx_hash}`}" target="_blank" class="tx-link">↗ ${abbreviate(d.arc_tx_hash, 4, 4)}</a>`
     : (!isClose && d.anchor_state === "pending"
-      ? `<span class="anchor-pending">anchoring on arc…</span>`
+      ? `<span class="anchor-pending">anchoring…</span>`
       : "");
 
+  // Compact stats — different per action.
+  const stats = [];
   if (isClose) {
-    return renderCloseCard(d, verbKey, verbLabel, sideClass, sideLabel, txLink);
+    const pnlClass = d.realized_pnl_usd >= 0 ? "act-pnl-pos" : "act-pnl-neg";
+    stats.push(
+      `<span class="${pnlClass}">${fmtUsd(d.realized_pnl_usd, true)}</span>`,
+    );
+    if (d.realized_pnl_pct != null) {
+      const sign = d.realized_pnl_pct >= 0 ? "+" : "";
+      stats.push(`${sign}${d.realized_pnl_pct.toFixed(2)}%`);
+    }
+    if (d.held_seconds != null) stats.push(`held ${fmtDuration(d.held_seconds)}`);
+  } else {
+    if (d.leverage != null) stats.push(`<strong>${d.leverage.toFixed(1)}×</strong>`);
+    if (d.notional_usd != null) stats.push(`${fmtUsd(d.notional_usd)}`);
+    if (d.tier) stats.push(`<strong>${d.tier}</strong>`);
   }
-  return renderOpenCard(d, verbKey, verbLabel, sideClass, sideLabel, txLink);
-}
+  const statsHtml = stats.join('<span class="sep">·</span>');
 
-function renderOpenCard(d, verbKey, verbLabel, sideClass, sideLabel, txLink) {
-  const meta = [];
-  if (d.leverage != null) meta.push(`<strong>${d.leverage.toFixed(1)}×</strong> lev`);
-  if (d.notional_usd != null) meta.push(`${fmtUsd(d.notional_usd)} notional`);
-  if (d.qty != null) meta.push(`qty ${fmtNum(d.qty, 4)}`);
-  if (d.stop_price != null) meta.push(`stop ${fmtNum(d.stop_price, 2)}`);
-  if (d.take_price != null) meta.push(`take ${fmtNum(d.take_price, 2)}`);
-  if (d.tier) meta.push(`tier <strong>${d.tier}</strong>`);
-  if (d.regime) meta.push(`regime <strong>${d.regime}</strong>`);
+  // Hidden detail section, shown on click.
+  const detailRows = [];
+  if (!isClose) {
+    const m = [];
+    if (d.qty != null) m.push(`qty <strong>${fmtNum(d.qty, 4)}</strong>`);
+    if (d.stop_price != null) m.push(`stop <strong>${fmtNum(d.stop_price, 4)}</strong>`);
+    if (d.take_price != null) m.push(`take <strong>${fmtNum(d.take_price, 4)}</strong>`);
+    if (d.regime) m.push(`regime <strong>${d.regime}</strong>`);
+    if (d.decision_id) m.push(`<span style="color:var(--fg-dim)">${d.decision_id}</span>`);
+    if (m.length) detailRows.push(`<div class="act-detail-row">${m.join(" · ")}</div>`);
+    if (d.reasoning) {
+      detailRows.push(`<div>“${escapeHtml(d.reasoning)}”</div>`);
+    }
+  } else {
+    const m = [];
+    if (d.entry_price != null && d.exit_price != null) {
+      m.push(`entry <strong>${fmtNum(d.entry_price, 4)}</strong> → exit <strong>${fmtNum(d.exit_price, 4)}</strong>`);
+    }
+    if (d.qty != null) m.push(`qty <strong>${fmtNum(d.qty, 4)}</strong>`);
+    if (d.leverage != null) m.push(`<strong>${d.leverage.toFixed(1)}×</strong> lev`);
+    if (d.tier) m.push(`tier <strong>${d.tier}</strong>`);
+    if (d.regime) m.push(`regime <strong>${d.regime}</strong>`);
+    if (m.length) detailRows.push(`<div class="act-detail-row">${m.join(" · ")}</div>`);
+  }
 
   return `
     <div class="act act-${verbKey}">
-      <div class="act-head">
+      <div class="act-row">
         <span class="act-verb act-verb-${verbKey}">${verbLabel}</span>
         <span class="act-asset">${d.asset || "?"}</span>
-        <span class="${sideClass}">${sideLabel}</span>
-        <span class="audit-id">${d.decision_id || ""}</span>
+        <span class="act-side ${sideClass}">${sideLabel}</span>
+        <span class="act-stats">${statsHtml}</span>
+        <span class="act-spacer"></span>
         <span class="act-when" title="${d.decided_at_iso || ""}">${formatTimestamp(d.decided_at_iso)}</span>
+        ${txLink}
       </div>
-      ${meta.length ? `<div class="act-meta">${meta.join('<span class="act-meta-sep">·</span>')}</div>` : ""}
-      ${d.reasoning ? `<div class="act-reason">“${escapeHtml(d.reasoning)}”</div>` : ""}
-      ${txLink ? `<div class="act-foot">${txLink}</div>` : ""}
-    </div>`;
-}
-
-function renderCloseCard(d, verbKey, verbLabel, sideClass, sideLabel, txLink) {
-  const pnlClass = d.realized_pnl_usd >= 0 ? "act-pnl-pos" : "act-pnl-neg";
-  const pnlText = fmtUsd(d.realized_pnl_usd, true);
-  const pnlPct = d.realized_pnl_pct != null
-    ? ` <span class="muted">(${d.realized_pnl_pct >= 0 ? "+" : ""}${d.realized_pnl_pct.toFixed(2)}%)</span>` : "";
-  const heldText = d.held_seconds != null ? fmtDuration(d.held_seconds) : null;
-
-  const meta = [];
-  if (d.entry_price != null && d.exit_price != null) {
-    meta.push(`entry ${fmtNum(d.entry_price, 2)} → exit ${fmtNum(d.exit_price, 2)}`);
-  }
-  if (d.qty != null) meta.push(`qty ${fmtNum(d.qty, 4)}`);
-  if (d.leverage != null) meta.push(`<strong>${d.leverage.toFixed(1)}×</strong> lev`);
-  if (heldText) meta.push(`held ${heldText}`);
-  if (d.tier) meta.push(`tier <strong>${d.tier}</strong>`);
-
-  return `
-    <div class="act act-${verbKey}">
-      <div class="act-head">
-        <span class="act-verb act-verb-${verbKey}">${verbLabel}</span>
-        <span class="act-asset">${d.asset || "?"}</span>
-        <span class="${sideClass}">${sideLabel}</span>
-        <span class="${pnlClass}">${pnlText}${pnlPct}</span>
-        <span class="act-when" title="${d.decided_at_iso || ""}">${formatTimestamp(d.decided_at_iso)}</span>
-      </div>
-      ${meta.length ? `<div class="act-meta">${meta.join('<span class="act-meta-sep">·</span>')}</div>` : ""}
-      ${txLink ? `<div class="act-foot">${txLink}</div>` : ""}
+      ${detailRows.length ? `<div class="act-detail">${detailRows.join("")}</div>` : ""}
     </div>`;
 }
 
@@ -512,6 +525,21 @@ function fmtDuration(seconds) {
   if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${Math.round(seconds % 60)}s`;
   return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
 }
+
+// Section-level collapse toggle for the activity feed.
+function _wireActivityToggle() {
+  const btn = document.getElementById("activity-toggle");
+  const feed = document.getElementById("decisions");
+  const blurb = document.getElementById("activity-blurb");
+  if (!btn || !feed) return;
+  btn.addEventListener("click", () => {
+    const hidden = feed.classList.toggle("collapsed");
+    btn.textContent = hidden ? "+" : "−";
+    btn.title = hidden ? "expand" : "collapse";
+    if (blurb) blurb.style.display = hidden ? "none" : "";
+  });
+}
+_wireActivityToggle();
 
 function escapeHtml(s) {
   return String(s)

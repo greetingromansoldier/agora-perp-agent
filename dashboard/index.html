@@ -118,12 +118,15 @@
       </section>
 
       <section>
-        <h2>Recent activity</h2>
-        <p class="muted">
-          Live timeline — every open, close, stop-out, and take-profit
-          from the running agent. Closures show realized PnL and how
-          long the position was held. Each anchored event carries an
-          arcscan link verifying the decision on Arc.
+        <div class="section-header">
+          <h2>Recent activity</h2>
+          <div class="section-tools">
+            <span class="muted" id="activity-count">0</span>
+            <button class="toggle-btn" id="activity-toggle" title="collapse">−</button>
+          </div>
+        </div>
+        <p class="muted" id="activity-blurb">
+          Live timeline — opens, closes, stops, takes. Click a row to expand the reasoning. Closures show PnL and how long the position was held.
         </p>
         <div class="activity" id="decisions">
           <div class="placeholder muted">(no activity yet — agent is warming up)</div>
