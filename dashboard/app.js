@@ -86,34 +86,59 @@ function decodeCreateJobDescription(rawInput) {
 }
 
 /**
- * Parse the on-chain description string. Two formats supported:
+ * Parse the on-chain description string. Three formats supported:
  *
- *   v1 (legacy):
+ *   v1 (smoke-test legacy):
  *     "agora:<audit_id_36>:0x<hash_64>"
  *
- *   v2 (current, human-readable):
- *     "agora|<short_id_8>|<ASSET>|<L|S>|<qty>@<lev>x|$<notional>|<tier>|
- *      <regime>|stop=<stop> take=<take>|hash=0x<hash_64>"
+ *   v2 (intermediate pipe-separated):
+ *     "agora|<short_id>|<ASSET>|<L|S>|...|hash=0x<hash_64>"
  *
- * Returns `{auditId, anchorHash, summary?}` or null on no match. The
- * `summary` field is the trade context extracted from v2; null for v1.
+ *   v3 (current readable sentence):
+ *     "agora-perp-agent · ASSET side qty @ lev x · $X notional ·
+ *      stop $Y take $Z · tier T · regime A/B/C · audit <id> ·
+ *      keccak 0x<hash_64>"
+ *
+ * Returns `{auditId, anchorHash, summary?}` or null on no match.
  */
 function parseDescription(desc) {
-  if (!desc) return null;
-  // v1 — legacy colon format
-  let m = desc.match(/^agora:([0-9a-f-]{36}):(0x[0-9a-f]{64})$/i);
-  if (m) return { auditId: m[1], anchorHash: m[2], summary: null };
-  // v2 — pipe format. audit_id is the second field; hash is at the end.
-  if (!desc.startsWith("agora|")) return null;
-  const parts = desc.split("|");
-  if (parts.length < 2) return null;
-  const shortId = parts[1];
-  const hashPart = parts[parts.length - 1] || "";
-  const hashMatch = hashPart.match(/hash=(0x[0-9a-f]{64})/i);
-  const anchorHash = hashMatch ? hashMatch[1] : null;
-  // Build a compact summary line from the middle pipe fields.
-  const summary = parts.slice(2, -1).join(" · ");
-  return { auditId: shortId, anchorHash, summary };
+  if (!desc || !/^agora/i.test(desc)) return null;
+
+  // Pull the 64-char hex anchor hash out, regardless of label.
+  const hashMatch = desc.match(/0x[0-9a-f]{64}/i);
+  const anchorHash = hashMatch ? hashMatch[0] : null;
+
+  // Try each known format's audit-id extractor.
+  let auditId = null;
+  // v1: 36-char uuid after `agora:`
+  const v1 = desc.match(/^agora:([0-9a-f-]{36}):/i);
+  if (v1) {
+    auditId = v1[1];
+  } else {
+    // v2: 8-char hex after `agora|`
+    const v2 = desc.match(/^agora\|([0-9a-f]{8})\|/i);
+    if (v2) {
+      auditId = v2[1];
+    } else {
+      // v3: 8-char hex after the word "audit"
+      const v3 = desc.match(/\baudit\s+([0-9a-f]{8})\b/i);
+      if (v3) auditId = v3[1];
+    }
+  }
+
+  // Build a compact summary from the middle of v2 / v3 descriptions.
+  let summary = null;
+  if (desc.startsWith("agora|")) {
+    const parts = desc.split("|");
+    summary = parts.slice(2, -1).join(" · ");
+  } else if (/^agora-perp-agent\s+·\s+/i.test(desc)) {
+    // Strip leading "agora-perp-agent · " and trailing keccak/hash token.
+    const stripped = desc.replace(/^agora-perp-agent\s+·\s+/, "");
+    const cut = stripped.search(/\s+·\s+(?:keccak|hash)\s+/i);
+    summary = cut > 0 ? stripped.slice(0, cut) : stripped;
+  }
+
+  return { auditId, anchorHash, summary };
 }
 
 // ---------------------------------------------------------------- format

@@ -345,35 +345,29 @@ class CircleAnchor:
 
 
 def _build_description(record: AuditRecord, hash_hex: str) -> str:
-    """Compose a human-readable on-chain description for arcscan viewers.
+    """Compose a readable on-chain description for arcscan viewers.
 
-    Format (`|`-separated for grep, ~180 chars):
+    Reads like a trade receipt. Example:
 
-        agora | <short_id> | <ASSET> | <L/S> | <qty>@<lev>x |
-            $<notional> | <tier> | <regime> |
-            stop=<stop> take=<take> | edge=<edge_bps>bps |
-            hash=<keccak>
+        agora-perp-agent · OP long 872.51 @ 7.4x · $110 notional ·
+        stop $0.12 take $0.13 · tier T3 · regime DN/NRM/NEU ·
+        audit 1f04b5fa · keccak 0xf17a...
 
-    Anyone reading the tx on arcscan sees the trade summary first;
-    `hash=...` is appended for cryptographic verification against the
-    off-chain audit record (`keccak256(canonical_json + nonce)`).
+    Each field is labelled so a viewer skimming the description on
+    arcscan can read it as a sentence. Crypto-verification is the
+    trailing `keccak <hash>` token — the off-chain audit record
+    hashes (with its nonce) to exactly that value.
 
-    Short fields kept compact so the description fits comfortably in
-    one tx without inflating gas (each char ≈ 16 gas; ~180 chars =
-    ~2.8 k gas on top of the createJob base cost).
+    ~170-200 chars per anchor; each char ≈ 16 gas, so the formatting
+    cost is micro-cents.
     """
     short_id = record.audit_id[:8]
-    parts: list[str] = [f"agora|{short_id}|{record.asset}"]
-
-    if record.side:
-        parts.append("L" if record.side == "long" else "S")
-    else:
-        parts.append("?")
-
     sized = record.sized or {}
+    asset = record.asset
+    side = record.side or "?"
     qty = sized.get("qty")
-    notional = sized.get("notional_usd")
     leverage = sized.get("leverage")
+    notional = sized.get("notional_usd")
     tier = sized.get("tier")
     trend = sized.get("regime_trend")
     vol = sized.get("regime_vol")
@@ -381,19 +375,31 @@ def _build_description(record: AuditRecord, hash_hex: str) -> str:
     stop = sized.get("stop_price")
     take = sized.get("take_price")
 
-    if qty is not None and leverage is not None:
-        parts.append(f"{qty:.6f}@{leverage:.1f}x")
-    if notional is not None:
-        parts.append(f"${notional:.0f}")
-    if tier:
-        parts.append(str(tier))
-    if trend and vol and fund:
-        parts.append(f"{_compact(trend)}*{_compact(vol)}*{_compact(fund)}")
-    if stop is not None and take is not None:
-        parts.append(f"stop={stop:.2f} take={take:.2f}")
+    parts: list[str] = ["agora-perp-agent"]
 
-    parts.append(f"hash={hash_hex}")
-    return "|".join(parts)
+    if qty is not None and leverage is not None:
+        parts.append(f"{asset} {side} {qty:.4f} @ {leverage:.1f}x")
+    else:
+        parts.append(f"{asset} {side}")
+
+    if notional is not None:
+        parts.append(f"${notional:.0f} notional")
+
+    if stop is not None and take is not None:
+        parts.append(f"stop ${stop:.4f} take ${take:.4f}")
+
+    if tier:
+        parts.append(f"tier {tier}")
+
+    if trend and vol and fund:
+        parts.append(
+            f"regime {_compact(trend)}/{_compact(vol)}/{_compact(fund)}"
+        )
+
+    parts.append(f"audit {short_id}")
+    parts.append(f"keccak {hash_hex}")
+
+    return " · ".join(parts)
 
 
 _REGIME_SHORT = {
