@@ -1209,11 +1209,14 @@ def main() -> int:
         ),
     )
     ap.add_argument(
-        "--push-every", type=float, default=300.0,
+        "--push-every", type=float, default=60.0,
         help=(
-            "Seconds between snapshot commits + pushes; clamped to a "
-            "60s floor. Default 300 (= 5 min); faster than ~120s is "
-            "wasted bandwidth since GH Pages takes ~60s to redeploy."
+            "Seconds between snapshot commits + pushes; floor 60. "
+            "Default 60 = ~1 push per minute. Since the GH Pages "
+            "workflow now ignores `dashboard/data/**` paths, snapshot "
+            "pushes do not redeploy Pages — the dashboard fetches the "
+            "snapshot directly from raw.githubusercontent.com, so "
+            "latency ≈ push-every + ~10s CDN cache."
         ),
     )
     args = ap.parse_args()

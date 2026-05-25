@@ -19,8 +19,23 @@ const SELECTOR_CREATE_JOB = "0x41528812";
 
 const BLOCKSCOUT_BASE = "https://testnet.arcscan.app";
 const REFRESH_MS = 30_000;
-const SNAPSHOT_REFRESH_MS = 5_000;
-const SNAPSHOT_PATH = "data/snapshot.json";
+const SNAPSHOT_REFRESH_MS = 10_000;
+
+// On deployed GitHub Pages, the bundled `data/snapshot.json` lags by the
+// next Pages rebuild (~60s after the bot pushes). We bypass that by
+// fetching the file from raw.githubusercontent.com directly, which
+// reflects the latest commit on main with only a short CDN cache
+// (defeated by the cache-buster query param).
+//
+// On localhost (dev preview via `python -m http.server -d dashboard`),
+// the relative path serves the on-disk file the bot is writing in
+// real-time, which is even faster — no GitHub round trip at all.
+const IS_LOCAL =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1";
+const SNAPSHOT_PATH = IS_LOCAL
+  ? "data/snapshot.json"
+  : "https://raw.githubusercontent.com/greetingromansoldier/agora-perp-agent/main/dashboard/data/snapshot.json";
 
 // ---------------------------------------------------------------- fetch
 
@@ -430,6 +445,14 @@ async function refreshSnapshot() {
     realizedEl.className = "value " + (snap.realized_pnl_usd >= 0 ? "pnl-pos" : "pnl-neg");
   }
   setText("stat-open", (snap.open_positions || []).length.toString());
+
+  // Snapshot freshness — overrides the generic "last update" stat so
+  // viewers see "bot's data is X minutes old" rather than just when the
+  // browser last refreshed.
+  if (snap.generated_at_iso) {
+    setText("stat-updated", formatTimestamp(snap.generated_at_iso));
+  }
+
   renderEquityChart(snap.equity_curve, snap.starting_balance_usd);
   renderPositions(snap.open_positions);
   renderDecisions(snap.recent_decisions);
