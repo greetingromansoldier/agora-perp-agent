@@ -31,6 +31,27 @@ def sma(bars: tuple[OhlcBar, ...], n: int) -> float:
     return sum(closes[-n:]) / n
 
 
+def ema(bars: tuple[OhlcBar, ...], n: int) -> float:
+    """Exponential moving average with ``α = 2 / (n + 1)``.
+
+    Seeded with the SMA of the first ``n`` closes, then folded forward
+    over the remaining bars. With exactly ``n`` bars the result equals
+    the SMA — accept this degenerate case and warm up with more history
+    for a properly-smoothed value.
+
+    Raises:
+        ValueError: if fewer than ``n`` bars are available.
+    """
+    closes = _closes(bars)
+    if len(closes) < n:
+        raise ValueError(f"ema needs >= {n} bars, got {len(closes)}.")
+    alpha = 2.0 / (n + 1.0)
+    value = sum(closes[:n]) / n
+    for close in closes[n:]:
+        value = alpha * close + (1.0 - alpha) * value
+    return value
+
+
 def roc(bars: tuple[OhlcBar, ...], n: int) -> float:
     """Rate of change in percent over ``n`` bars.
 

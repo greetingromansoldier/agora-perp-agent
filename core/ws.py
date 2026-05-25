@@ -63,6 +63,10 @@ class HyperliquidWsSource:
             `HyperliquidSource._compute_depth`).
         ohlcv_refresh_s: REST refresh cadence for OHLCV history.
         book_levels: levels per side requested from the WS feed.
+        bars_limit: number of OHLCV bars to keep in cache per coin.
+            Default 50 covers the 14-bar indicators in `BaselineForecast`.
+            Bump to ~720 when the consumer aggregates 5m bars into 1h
+            for the regime classifier (needs ATR-50 → 60+ 1h bars).
     """
 
     def __init__(
@@ -73,12 +77,14 @@ class HyperliquidWsSource:
         band_bps: float = 50.0,
         ohlcv_refresh_s: float = 30.0,
         book_levels: int = 20,
+        bars_limit: int = 50,
     ) -> None:
         self._coins = list(coins)
         self._interval = interval
         self._band_bps = band_bps
         self._ohlcv_refresh_s = ohlcv_refresh_s
         self._book_levels = book_levels
+        self._bars_limit = bars_limit
         self._caches: dict[str, _CoinCache] = {c: _CoinCache() for c in coins}
         self._lock = threading.Lock()
         self._stop = threading.Event()
@@ -311,7 +317,7 @@ class HyperliquidWsSource:
     async def _poll_ohlcv_once(self, exchange, symbol: str, coin: str) -> None:
         try:
             ohlcv = await exchange.fetch_ohlcv(
-                symbol, self._interval, limit=50
+                symbol, self._interval, limit=self._bars_limit
             )
         except Exception as e:  # noqa: BLE001
             print(f"[rest ohlcv {coin}] {e}", file=sys.stderr)

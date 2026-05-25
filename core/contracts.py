@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
+from enum import StrEnum
 
 
 @dataclass(frozen=True, slots=True)
@@ -195,6 +196,9 @@ class Position:
     last_mark: float
     last_funding_ts: datetime
     accrued_funding_usd: float = 0.0
+    stop_price: float | None = None
+    take_price: float | None = None
+    stop_take_plan: StopTakePlan | None = None
 
     def unrealized_pnl_usd(self) -> float:
         """Mark-to-market PnL on the price leg, in USD; excludes funding."""
@@ -419,3 +423,161 @@ class Decisions:
 
     decisions: tuple[Decision, ...]
     summary: str
+
+
+class Tier(StrEnum):
+    """universe taxonomy bucket per `coin-tiers.md` §0.
+
+    Drives sizing multipliers, leverage caps, ATR-based stop distances, and
+    the funding-rate decision matrix. Coins outside the taxonomy default to
+    `T4` (skip-by-default per §0).
+    """
+
+    T1 = "T1"
+    T2 = "T2"
+    T3 = "T3"
+    T4 = "T4"
+
+
+@dataclass(frozen=True, slots=True)
+class RegimeTag:
+    """three-axis regime label per `regime-classification.md` §0.
+
+    The funding axis carries five values; `EXTREME` is split by sign
+    (`EXTREME_POS`, `EXTREME_NEG`) so the playbook lookup at §4 — which
+    uses `EXTREME(+)` / `EXTREME(-)` notation — has a deterministic key.
+
+    Attributes:
+        trend: `"UP" | "DOWN" | "RANGE"` from EMA-20/50 + ADX-14 (§1).
+        vol: `"COMPRESSED" | "NORMAL" | "EXPANDED" | "CRISIS"` from
+            ATR(10)/ATR(50) ratio + flash-crash override (§2).
+        funding: `"NEUTRAL" | "BULL_BIAS" | "BEAR_BIAS" | "EXTREME_POS" |
+            "EXTREME_NEG"` per tier-aware bins (§3).
+    """
+
+    trend: str
+    vol: str
+    funding: str
+
+
+@dataclass(frozen=True, slots=True)
+class SizingConfig:
+    """sizing-pipeline parameters per `risk-sizing-methods.md` §5.
+
+    Defaults follow the docs literally. Tuning machinery is private alpha;
+    public ships only this baseline. See `tmp/spec-mapping.md` §1.
+
+    Attributes:
+        base_risk_fraction: equity fraction per trade (§1 floor 0.005;
+            never exceed 0.01 per §7).
+        vol_target_annualized: annualised target for vol-targeting (§3).
+        vol_scale_cap: ceiling on `vol_target / realized_vol` so
+            COMPRESSED-vol coins don't get runaway leverage (§3, §7 #4).
+        kelly_fraction: quarter-Kelly default (§4).
+        min_kelly_history: in-regime trades before Kelly engages (§4).
+        atr_period_stops: ATR period on 1h candles for stop distance
+            (`risk-stops-and-exits.md` §1.1).
+        atr_period_regime_fast: short ATR for vol ratio (§2).
+        atr_period_regime_slow: long ATR for vol ratio (§2).
+        funding_drag_max_pct: ceiling on
+            `leverage × |funding| × intervals` (`risk-leverage-and-margin.md`
+            §5).
+        funding_cost_to_pnl_max: per `funding-as-signal.md` §6.
+    """
+
+    base_risk_fraction: float = 0.005
+    vol_target_annualized: float = 0.30
+    vol_scale_cap: float = 2.5
+    kelly_fraction: float = 0.25
+    min_kelly_history: int = 100
+    atr_period_stops: int = 14
+    atr_period_regime_fast: int = 10
+    atr_period_regime_slow: int = 50
+    funding_drag_max_pct: float = 0.20
+    funding_cost_to_pnl_max: float = 0.30
+
+
+@dataclass(frozen=True, slots=True)
+class LeverageCaps:
+    """three leverage caps per `risk-leverage-and-margin.md` §6.
+
+    Chosen leverage is `min(venue_cap, operational_cap, liq_safety_cap)`,
+    then potentially reduced by the funding-drag check (§5).
+
+    Attributes:
+        venue_cap: HL's per-asset max-leverage at the candidate notional.
+        operational_cap: self-imposed cap by tier per §0 (T1=5×, T2/T3=3×,
+            T4=1.5×).
+        liq_safety_cap: `1 / (4 × stop_distance_pct + mm_rate)` so the liq
+            level sits ≥ 4× stop distance from entry (§3).
+    """
+
+    venue_cap: float
+    operational_cap: float
+    liq_safety_cap: float
+
+
+@dataclass(frozen=True, slots=True)
+class StopTakePlan:
+    """stop / take-profit / hardening plan per `risk-stops-and-exits.md`.
+
+    Attributes:
+        stop_distance: in price units; `atr_multiplier × ATR(14, 1h)`
+            (§1.1 tier × vol-regime table).
+        take_distance: `r_multiple × stop_distance` (§3.1).
+        r_multiple: 2.5 trend / 3.0 tail-wind / 1.5 mean-rev / 2.0
+            mean-rev vol-coil (§3.1).
+        scaled_exit: `True` = 50% at +1R, 50% at +2.5R with breakeven
+            shift after the first take (§3.2). Default for trend regimes.
+        trail_after_first_take: trail remaining 50% at `k × ATR(14, 1h)`
+            after the +1R take fills (§3.3).
+        stop_hardening: `"limit_stop"` | `"market_stop"` |
+            `"soft_stop_scaled"` (§2 table).
+    """
+
+    stop_distance: float
+    take_distance: float
+    r_multiple: float
+    scaled_exit: bool
+    trail_after_first_take: bool
+    stop_hardening: str
+
+
+@dataclass(frozen=True, slots=True)
+class SizedCandidate:
+    """post-sizing trade plan; the executor's input.
+
+    Replaces `AllocationCandidate`'s naive fixed `notional` with a
+    docs-derived qty, leverage, and full exit plan. Carries the audit
+    trail so L9 receipts can hash a stable schema.
+
+    Attributes:
+        candidate: source `AllocationCandidate` (carries forecast + cost).
+        tier: from `classify_tier`.
+        regime: from `compute_regime_tag` (post-BTC-override).
+        qty: base-unit quantity to fill.
+        notional: `qty × mark_price` in USD.
+        leverage: chosen leverage, capped per `LeverageCaps` and adjusted
+            for funding drag (§5).
+        margin_required: `notional / leverage`.
+        stop_price: signed by side; `entry - stop_distance` for long,
+            `entry + stop_distance` for short.
+        take_price: first-take level (50% exit if `scaled_exit`).
+        stop_take_plan: full exit plan including hardening and trail.
+        leverage_caps: the three caps that informed `leverage`.
+        sizing_audit: per-step breakdown of the §5 pipeline (every named
+            field from §6 of `risk-sizing-methods.md` for receipts).
+    """
+
+    candidate: AllocationCandidate
+    tier: Tier
+    regime: RegimeTag
+    qty: float
+    notional: float
+    leverage: float
+    margin_required: float
+    stop_price: float
+    take_price: float
+    stop_take_plan: StopTakePlan
+    leverage_caps: LeverageCaps
+    sizing_audit: dict[str, float]

@@ -22,6 +22,7 @@ from core.contracts import (
     MarketData,
     PortfolioState,
     Position,
+    SizedCandidate,
 )
 
 _EPS = 1e-12
@@ -99,6 +100,81 @@ class SimExecutor:
             timestamp=market.timestamp,
             side=candidate.side,
             qty=qty,
+            price=fill_price,
+            fee_paid_usd=fee_usd,
+            is_open=True,
+            realized_pnl_usd=0.0,
+        )
+
+    def open_sized(
+        self,
+        sized: SizedCandidate,
+        market: MarketData,
+        portfolio: PortfolioState,
+    ) -> Fill:
+        """Open a position from a docs-derived `SizedCandidate`.
+
+        Like `open()` but uses `sized.qty` directly instead of computing
+        qty from a naive notional, and registers `stop_price`,
+        `take_price`, and `stop_take_plan` on the `Position` so
+        `check_stops` can fire stops/takes on subsequent ticks.
+
+        Args:
+            sized: post-sizing trade plan from `TierRegimeSizer.size`.
+            market: snapshot whose `mark_price` and `book_depth` drive
+                the fill price.
+            portfolio: account state; mutated on success.
+
+        Returns:
+            A `Fill` with `is_open=True` and `realized_pnl_usd=0`.
+
+        Raises:
+            ValueError: position already open on this asset, asset
+                mismatch with market, or non-positive sized qty.
+        """
+        candidate = sized.candidate
+        if portfolio.has(candidate.asset):
+            raise ValueError(
+                f"position already open for `{candidate.asset}`; close it first"
+            )
+        if candidate.asset != market.asset:
+            raise ValueError(
+                f"candidate asset {candidate.asset!r} does not match "
+                f"market asset {market.asset!r}"
+            )
+        if sized.qty <= 0.0:
+            raise ValueError(
+                f"sized.qty must be positive, got {sized.qty} "
+                f"(playbook may be stand-down — caller should skip)"
+            )
+
+        slip_frac = self._side_slippage_bps(sized.notional, market) / _BPS
+        if candidate.side == "long":
+            fill_price = market.mark_price * (1.0 + slip_frac)
+        else:
+            fill_price = market.mark_price * (1.0 - slip_frac)
+
+        fee_usd = sized.notional * self._schedule.taker_bps / _BPS
+
+        portfolio.balance_usd -= fee_usd
+        portfolio.positions[candidate.asset] = Position(
+            asset=candidate.asset,
+            side=candidate.side,
+            qty=sized.qty,
+            entry_price=fill_price,
+            entry_time=market.timestamp,
+            last_mark=market.mark_price,
+            last_funding_ts=market.timestamp,
+            stop_price=sized.stop_price,
+            take_price=sized.take_price,
+            stop_take_plan=sized.stop_take_plan,
+        )
+
+        return Fill(
+            asset=candidate.asset,
+            timestamp=market.timestamp,
+            side=candidate.side,
+            qty=sized.qty,
             price=fill_price,
             fee_paid_usd=fee_usd,
             is_open=True,
@@ -185,6 +261,46 @@ class SimExecutor:
         if market.timestamp <= pos.last_funding_ts:
             return
         self._accrue_funding(pos, market)
+
+    def check_stops(
+        self,
+        market: MarketData,
+        portfolio: PortfolioState,
+    ) -> Fill | None:
+        """Fire stop or take on `market.asset` if the level was breached.
+
+        Inspects the position's `stop_price` and `take_price` (set at
+        `open_sized` time) against the current `market.mark_price` and
+        closes the position via `close()` if either is hit. Returns the
+        closing `Fill` on a hit, `None` otherwise.
+
+        No-op when there is no open position on the asset, no stop/take
+        registered, or neither level has been crossed. The stop check
+        runs before the take check — if both would fire on the same
+        tick (price gap), the stop wins (worst case is recorded).
+
+        Args:
+            market: current snapshot; `mark_price` is the trigger basis.
+            portfolio: account state; mutated if the position closes.
+
+        Returns:
+            The closing `Fill` if a stop or take fired; `None` if no
+            action taken.
+        """
+        pos = portfolio.positions.get(market.asset)
+        if pos is None:
+            return None
+        if pos.stop_price is not None:
+            if pos.side == "long" and market.mark_price <= pos.stop_price:
+                return self.close(market.asset, market, portfolio)
+            if pos.side == "short" and market.mark_price >= pos.stop_price:
+                return self.close(market.asset, market, portfolio)
+        if pos.take_price is not None:
+            if pos.side == "long" and market.mark_price >= pos.take_price:
+                return self.close(market.asset, market, portfolio)
+            if pos.side == "short" and market.mark_price <= pos.take_price:
+                return self.close(market.asset, market, portfolio)
+        return None
 
     # ------------------------------------------------------------------ internals
 
