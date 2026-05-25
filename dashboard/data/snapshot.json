@@ -1,16 +1,146 @@
 {
   "schema_version": "v1",
-  "generated_at_iso": "2026-05-25T19:18:06.821917+00:00",
+  "generated_at_iso": "2026-05-25T19:20:07.806488+00:00",
   "agent_wallet": "0x5b09fc1d4a519b4591217fb5d06247159b9fcf44",
   "starting_balance_usd": 1000.0,
-  "equity_usd": 1000.0,
-  "balance_usd": 1000.0,
-  "realized_pnl_usd": 0.0,
-  "unrealized_pnl_usd": 0.0,
+  "equity_usd": 994.7964884393548,
+  "balance_usd": 997.5653827973043,
+  "realized_pnl_usd": -2.4346172026956765,
+  "unrealized_pnl_usd": -2.768894357949562,
   "agent_status": "idle",
-  "ticks_processed": 1273,
-  "open_positions": [],
+  "ticks_processed": 60,
+  "open_positions": [
+    {
+      "asset": "ETH",
+      "side": "short",
+      "qty": 1.1397620459422706,
+      "entry_price": 2122.772614044922,
+      "mark_price": 2123.7,
+      "notional_usd": 2420.5126569676,
+      "unrealized_pnl_usd": -1.0569993135374007,
+      "accrued_funding_usd": 0.0,
+      "stop_price": 2140.1180894952,
+      "take_price": 2097.0728657572,
+      "entry_time_iso": "2026-05-25T19:15:00+00:00",
+      "tier": "T1",
+      "regime": "RG\u00b7NORM\u00b7NEU",
+      "leverage": 19.068473671539916,
+      "audit_id": "b9f7ec03-a5f8-4999-b2fe-fc3f7cd8d4f9",
+      "decision_id": "d-0001",
+      "arc_tx_hash": "0x4e7a8e96e3a34acf967c88ae2b2005e3274aa37d1ee8b4680e11120256899daf",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0x4e7a8e96e3a34acf967c88ae2b2005e3274aa37d1ee8b4680e11120256899daf",
+      "anchor_state": "complete"
+    },
+    {
+      "asset": "SOL",
+      "side": "short",
+      "qty": 12.265621195010905,
+      "entry_price": 85.75063311077547,
+      "mark_price": 85.809,
+      "notional_usd": 1052.5006891226906,
+      "unrealized_pnl_usd": -0.7159061535592479,
+      "accrued_funding_usd": 0.0,
+      "stop_price": 86.78206250578818,
+      "take_price": 84.25690624131775,
+      "entry_time_iso": "2026-05-25T19:15:00+00:00",
+      "tier": "T2",
+      "regime": "RG\u00b7NORM\u00b7NEU",
+      "leverage": 13.868753535649502,
+      "audit_id": "fdfb3231-52e3-4d81-a114-eea82168ba02",
+      "decision_id": "d-0002",
+      "arc_tx_hash": "0x9d688acd0f97858fcfe5a642f5fef02b1ef001b7641658b520268b11a1ada978",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0x9d688acd0f97858fcfe5a642f5fef02b1ef001b7641658b520268b11a1ada978",
+      "anchor_state": "complete"
+    },
+    {
+      "asset": "XRP",
+      "side": "short",
+      "qty": 1429.44458189465,
+      "entry_price": 1.3559032336451038,
+      "mark_price": 1.3566,
+      "notional_usd": 1939.184519798282,
+      "unrealized_pnl_usd": -0.9959888908529134,
+      "accrued_funding_usd": 0.0,
+      "stop_price": 1.3684739239753394,
+      "take_price": 1.337789114036991,
+      "entry_time_iso": "2026-05-25T19:15:00+00:00",
+      "tier": "T2",
+      "regime": "RG\u00b7NORM\u00b7NEU",
+      "leverage": 16.33962203897403,
+      "audit_id": "29d5d1b3-ecd1-4525-93d0-33cc72327d2d",
+      "decision_id": "d-0003",
+      "arc_tx_hash": "0x66694291f1d141654ae5e234cf26fe0962f59eb6095f78827764a036aeef72de",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0x66694291f1d141654ae5e234cf26fe0962f59eb6095f78827764a036aeef72de",
+      "anchor_state": "complete"
+    }
+  ],
   "recent_decisions": [
+    {
+      "audit_id": "29d5d1b3-ecd1-4525-93d0-33cc72327d2d",
+      "decision_id": "d-0003",
+      "asset": "XRP",
+      "side": "short",
+      "action": "open",
+      "verdict": "EXECUTE",
+      "tier": "T2",
+      "regime": "RG\u00b7NORM\u00b7NEU",
+      "leverage": 16.33962203897403,
+      "stop_price": 1.3684739239753394,
+      "take_price": 1.337789114036991,
+      "notional_usd": 1938.6127419655243,
+      "qty": 1429.44458189465,
+      "entry_price": 1.3559032336451038,
+      "edge_after_cost_bps": -6.382131566344631,
+      "reasoning": "XRP meets criteria for entry as a third parallel position to capture mean reversion.",
+      "decided_at_iso": "2026-05-25T19:19:41.740533+00:00",
+      "anchor_state": "complete",
+      "arc_tx_hash": "0x66694291f1d141654ae5e234cf26fe0962f59eb6095f78827764a036aeef72de",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0x66694291f1d141654ae5e234cf26fe0962f59eb6095f78827764a036aeef72de"
+    },
+    {
+      "audit_id": "fdfb3231-52e3-4d81-a114-eea82168ba02",
+      "decision_id": "d-0002",
+      "asset": "SOL",
+      "side": "short",
+      "action": "open",
+      "verdict": "EXECUTE",
+      "tier": "T2",
+      "regime": "RG\u00b7NORM\u00b7NEU",
+      "leverage": 13.868753535649502,
+      "stop_price": 86.78206250578818,
+      "take_price": 84.25690624131775,
+      "notional_usd": 1052.0468611384754,
+      "qty": 12.265621195010905,
+      "entry_price": 85.75063311077547,
+      "edge_after_cost_bps": -6.1678741892831255,
+      "reasoning": "SOL qualifies for entry due to high bearish probability signal despite the negative edge.",
+      "decided_at_iso": "2026-05-25T19:19:41.730871+00:00",
+      "anchor_state": "complete",
+      "arc_tx_hash": "0x9d688acd0f97858fcfe5a642f5fef02b1ef001b7641658b520268b11a1ada978",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0x9d688acd0f97858fcfe5a642f5fef02b1ef001b7641658b520268b11a1ada978"
+    },
+    {
+      "audit_id": "b9f7ec03-a5f8-4999-b2fe-fc3f7cd8d4f9",
+      "decision_id": "d-0001",
+      "asset": "ETH",
+      "side": "short",
+      "action": "open",
+      "verdict": "EXECUTE",
+      "tier": "T1",
+      "regime": "RG\u00b7NORM\u00b7NEU",
+      "leverage": 19.068473671539916,
+      "stop_price": 2140.1180894952,
+      "take_price": 2097.0728657572,
+      "notional_usd": 2419.600847330846,
+      "qty": 1.1397620459422706,
+      "entry_price": 2122.772614044922,
+      "edge_after_cost_bps": -5.801024389610772,
+      "reasoning": "ETH shows the strongest signal among candidates with the least negative edge after costs.",
+      "decided_at_iso": "2026-05-25T19:19:41.703890+00:00",
+      "anchor_state": "complete",
+      "arc_tx_hash": "0x4e7a8e96e3a34acf967c88ae2b2005e3274aa37d1ee8b4680e11120256899daf",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0x4e7a8e96e3a34acf967c88ae2b2005e3274aa37d1ee8b4680e11120256899daf"
+    },
     {
       "audit_id": "d5eb075a-fcef-4fbb-a193-0410044bcdf4",
       "decision_id": "d-0003",
@@ -604,2955 +734,249 @@
       "anchor_state": "complete",
       "arc_tx_hash": "0xb6b0977dc8918b1c57bde4f3082c8bf85daaf1c947babaf5be4791a41e3922e5",
       "arcscan_url": "https://testnet.arcscan.app/tx/0xb6b0977dc8918b1c57bde4f3082c8bf85daaf1c947babaf5be4791a41e3922e5"
-    },
-    {
-      "audit_id": "1bb75e86-5bef-4e92-b965-59ba370f4d1f",
-      "decision_id": "d-0005",
-      "asset": "OP",
-      "side": "short",
-      "action": "open",
-      "verdict": "EXECUTE",
-      "tier": "T3",
-      "regime": "DOWN\u00b7NORMAL\u00b7NEUTRAL",
-      "leverage": 7.48661995646692,
-      "stop_price": 0.12743806151493797,
-      "take_price": 0.11830984621265508,
-      "notional_usd": 113.09710379883616,
-      "qty": 906.009002634272,
-      "entry_price": null,
-      "edge_after_cost_bps": null,
-      "reasoning": "Negative edge is acceptable under exploration mode logic.",
-      "decided_at_iso": "2026-05-25T03:21:33.083810+00:00",
-      "anchor_state": "complete",
-      "arc_tx_hash": "0xecfc64067b29f9f14ebf23e146172478dacc8c0e0228473b035dbc3291b37755",
-      "arcscan_url": "https://testnet.arcscan.app/tx/0xecfc64067b29f9f14ebf23e146172478dacc8c0e0228473b035dbc3291b37755"
-    },
-    {
-      "audit_id": "7c1c7851-7ccf-4b1d-8a54-638a21fb686c",
-      "decision_id": "d-0004",
-      "asset": "LINK",
-      "side": "short",
-      "action": "open",
-      "verdict": "EXECUTE",
-      "tier": "T3",
-      "regime": "RANGE\u00b7NORMAL\u00b7NEUTRAL",
-      "leverage": 8.321175775231652,
-      "stop_price": 9.549648855387266,
-      "take_price": 9.1380267169191,
-      "notional_usd": 111.05250443143741,
-      "qty": 11.83297862881592,
-      "entry_price": null,
-      "edge_after_cost_bps": null,
-      "reasoning": "Fits criteria for entry as edge is well within the acceptable -30 bps deviation.",
-      "decided_at_iso": "2026-05-25T03:21:33.068344+00:00",
-      "anchor_state": "complete",
-      "arc_tx_hash": "0xe0a3e8372fe7933c274d08450e679ec101cbef9e66b9c46bc3dcf892b309fd4a",
-      "arcscan_url": "https://testnet.arcscan.app/tx/0xe0a3e8372fe7933c274d08450e679ec101cbef9e66b9c46bc3dcf892b309fd4a"
-    },
-    {
-      "audit_id": "3797db21-8436-477c-9bd8-eae891226ab1",
-      "decision_id": "d-0002",
-      "asset": "XRP",
-      "side": "short",
-      "action": "open",
-      "verdict": "EXECUTE",
-      "tier": "T2",
-      "regime": "RANGE\u00b7NORMAL\u00b7NEUTRAL",
-      "leverage": 13.862689165336535,
-      "stop_price": 1.3619624679954396,
-      "take_price": 1.3223062980068407,
-      "notional_usd": 502.1207300128409,
-      "qty": 373.0188916223467,
-      "entry_price": null,
-      "edge_after_cost_bps": null,
-      "reasoning": "Edge is within 30 bps of zero threshold, initiating short.",
-      "decided_at_iso": "2026-05-25T03:21:33.059318+00:00",
-      "anchor_state": "complete",
-      "arc_tx_hash": "0xcc56789fc767206b031ab0f0675dbaf6dfe6f953dbb58af01f3697999985443d",
-      "arcscan_url": "https://testnet.arcscan.app/tx/0xcc56789fc767206b031ab0f0675dbaf6dfe6f953dbb58af01f3697999985443d"
     }
   ],
   "trade_history": [],
   "equity_curve": [
     {
-      "timestamp_iso": "2026-05-25T19:05:00.950715+00:00",
+      "timestamp_iso": "2026-05-25T19:19:08.116919+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:01.976376+00:00",
+      "timestamp_iso": "2026-05-25T19:19:09.132310+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:02.966207+00:00",
+      "timestamp_iso": "2026-05-25T19:19:10.148345+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:03.972599+00:00",
+      "timestamp_iso": "2026-05-25T19:19:11.141585+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:04.979792+00:00",
+      "timestamp_iso": "2026-05-25T19:19:12.160267+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:05.985695+00:00",
+      "timestamp_iso": "2026-05-25T19:19:13.154366+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:08.378728+00:00",
+      "timestamp_iso": "2026-05-25T19:19:14.164872+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:08.440911+00:00",
+      "timestamp_iso": "2026-05-25T19:19:15.170905+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:09.462323+00:00",
+      "timestamp_iso": "2026-05-25T19:19:16.173846+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:10.457334+00:00",
+      "timestamp_iso": "2026-05-25T19:19:17.179682+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:11.456747+00:00",
+      "timestamp_iso": "2026-05-25T19:19:18.178439+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:12.458513+00:00",
+      "timestamp_iso": "2026-05-25T19:19:19.182091+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:13.463025+00:00",
+      "timestamp_iso": "2026-05-25T19:19:20.186872+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:14.463524+00:00",
+      "timestamp_iso": "2026-05-25T19:19:21.191957+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:15.461531+00:00",
+      "timestamp_iso": "2026-05-25T19:19:22.198647+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:16.470800+00:00",
+      "timestamp_iso": "2026-05-25T19:19:23.205015+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:17.471939+00:00",
+      "timestamp_iso": "2026-05-25T19:19:24.205658+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:20.244452+00:00",
+      "timestamp_iso": "2026-05-25T19:19:25.211158+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:20.280811+00:00",
+      "timestamp_iso": "2026-05-25T19:19:26.207872+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:21.285671+00:00",
+      "timestamp_iso": "2026-05-25T19:19:27.222309+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:22.297038+00:00",
+      "timestamp_iso": "2026-05-25T19:19:29.604589+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:23.300020+00:00",
+      "timestamp_iso": "2026-05-25T19:19:29.622325+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:24.298561+00:00",
+      "timestamp_iso": "2026-05-25T19:19:30.640308+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:25.302467+00:00",
+      "timestamp_iso": "2026-05-25T19:19:31.639986+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:26.304578+00:00",
+      "timestamp_iso": "2026-05-25T19:19:32.644716+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:27.303684+00:00",
+      "timestamp_iso": "2026-05-25T19:19:33.648075+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:28.306607+00:00",
+      "timestamp_iso": "2026-05-25T19:19:34.654055+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:29.308041+00:00",
+      "timestamp_iso": "2026-05-25T19:19:35.658940+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:32.509461+00:00",
+      "timestamp_iso": "2026-05-25T19:19:36.660446+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:32.537978+00:00",
+      "timestamp_iso": "2026-05-25T19:19:37.668740+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:33.540747+00:00",
+      "timestamp_iso": "2026-05-25T19:19:38.668213+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:34.558900+00:00",
+      "timestamp_iso": "2026-05-25T19:19:40.535064+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:35.553270+00:00",
+      "timestamp_iso": "2026-05-25T19:19:40.671119+00:00",
       "equity_usd": 1000.0
     },
     {
-      "timestamp_iso": "2026-05-25T19:05:36.556453+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:37.563033+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:38.567341+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:39.572267+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:40.580555+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:41.573873+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:45.287216+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:45.320300+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:46.324580+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:47.335211+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:48.343086+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:49.333304+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:50.337155+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:51.340975+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:52.342294+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:53.343345+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:54.343849+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:56.798799+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:56.833898+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:57.841962+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:58.848797+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:05:59.856499+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:00.858326+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:01.858398+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:02.859938+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:03.873088+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:04.875584+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:05.876730+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:09.447913+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:09.464769+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:10.486433+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:11.486928+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:12.480971+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:13.490722+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:14.486977+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:15.498295+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:16.500778+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:17.498325+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:18.509606+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:21.666951+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:21.687081+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:22.716436+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:23.712862+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:24.711754+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:25.707564+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:26.705759+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:27.710561+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:28.712341+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:29.719164+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:30.721374+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:33.914589+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:33.937627+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:34.960448+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:35.962863+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:36.965467+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:37.972107+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:38.974406+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:39.972711+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:40.972791+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:41.984800+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:42.980806+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:46.787750+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:46.814309+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:47.819048+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:48.820397+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:49.835175+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:50.828641+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:51.836100+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:52.859568+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:53.841165+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:54.849724+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:55.863309+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:59.494910+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:06:59.515888+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:00.534420+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:01.525974+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:02.528078+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:03.541358+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:04.528901+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:05.551852+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:06.545156+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:07.557038+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:08.561933+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:11.537990+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:11.555713+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:12.575409+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:13.578357+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:14.586390+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:15.587952+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:16.594815+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:17.593794+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:18.600549+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:19.592434+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:20.605230+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:24.390190+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:24.408233+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:25.420415+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:26.431997+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:27.435917+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:28.436974+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:29.437349+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:30.434689+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:31.443581+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:32.444675+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:33.453830+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:36.672575+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:36.703863+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:37.716299+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:38.722216+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:39.728198+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:40.712373+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:41.738822+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:42.735567+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:43.744806+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:44.751821+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:45.754350+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:49.277715+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:49.306124+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:50.317490+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:51.313794+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:52.322009+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:53.322158+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:54.328100+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:55.330913+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:56.335785+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:57.333655+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:07:58.347860+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:01.641060+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:01.669979+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:02.680732+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:03.683958+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:04.695460+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:05.701718+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:06.707527+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:07.716188+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:08.719347+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:09.725435+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:10.729557+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:14.496394+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:14.522176+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:15.536390+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:16.541375+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:17.545740+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:18.547876+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:19.556492+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:20.555099+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:21.553858+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:22.550839+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:23.568629+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:25.482701+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:25.557666+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:26.577501+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:27.571622+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:28.613697+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:29.579929+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:30.595833+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:31.589113+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:32.594759+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:33.599396+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:34.598751+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:41.597556+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:41.631903+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:42.649038+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:43.632987+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:44.646403+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:45.643759+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:46.675216+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:47.661329+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:48.666432+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:49.670766+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:50.675545+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:54.843508+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:54.867581+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:55.880239+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:56.875899+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:57.881392+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:58.883092+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:08:59.892468+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:00.885828+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:01.899462+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:02.902183+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:03.908446+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:07.429820+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:07.452893+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:08.462935+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:09.468435+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:10.481129+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:11.481326+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:12.494529+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:13.494430+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:14.496714+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:15.498102+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:16.504565+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:19.766692+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:19.790049+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:20.806515+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:21.811992+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:22.811873+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:23.814713+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:24.819789+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:25.820926+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:26.829885+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:27.823642+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:28.834097+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:30.666043+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:30.831487+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:31.833556+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:32.846486+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:33.846067+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:34.855832+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:35.858967+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:36.864247+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:37.870415+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:38.874884+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:39.878968+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:53.754493+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:53.835912+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:54.838344+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:55.852253+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:56.884976+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:57.862347+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:58.867407+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:09:59.869829+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:00.875906+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:01.878755+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:02.884006+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:05.554083+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:05.574199+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:06.586753+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:07.595707+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:08.591317+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:09.598573+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:10.601445+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:11.604394+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:12.626303+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:13.614777+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:14.626546+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:17.016695+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:17.050859+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:18.054187+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:19.057878+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:20.061191+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:21.073652+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:22.065945+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:23.073026+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:24.075746+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:25.079291+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:26.087743+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:28.244078+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:28.270788+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:29.281031+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:30.292987+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:31.295287+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:32.294732+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:33.306898+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:34.305916+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:35.307783+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:36.313377+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:37.320993+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:39.474150+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:39.504158+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:40.513613+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:41.525770+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:42.519211+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:43.536748+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:44.522364+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:45.539161+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:46.541392+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:47.547453+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:48.552193+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:51.286995+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:51.307869+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:52.325779+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:53.321962+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:54.325972+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:55.336740+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:56.344485+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:57.340754+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:58.339697+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:10:59.346644+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:00.342243+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:05.238553+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:05.259644+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:06.275123+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:07.283951+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:08.285450+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:09.294891+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:10.293476+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:11.299980+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:12.309534+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:13.308301+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:14.307809+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:18.995435+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:19.039419+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:20.041986+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:21.050762+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:22.046775+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:23.048086+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:24.048517+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:25.056271+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:26.061450+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:27.061810+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:28.065061+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:31.070674+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:31.092546+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:32.113748+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:33.105875+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:34.114829+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:35.119665+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:36.116938+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:37.125481+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:38.134520+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:39.134882+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:40.142774+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:52.891928+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:52.919159+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:53.932329+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:54.927051+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:55.918040+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:56.940985+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:57.945583+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:58.939695+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:11:59.950927+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:00.948040+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:01.951136+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:03.889659+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:03.953250+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:04.964382+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:05.974711+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:06.973378+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:07.992422+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:08.991428+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:09.988020+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:10.996878+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:11.999561+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:12.993411+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:14.864875+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:14.990324+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:16.010420+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:17.001926+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:18.005052+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:19.017156+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:20.018997+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:21.016003+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:22.020478+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:23.025520+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:24.023868+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:25.785179+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:26.031053+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:27.047710+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:28.042718+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:29.042647+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:30.050329+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:31.056398+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:32.057152+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:33.054541+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:34.059163+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:35.058738+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:36.682417+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:37.063499+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:38.067898+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:39.072283+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:40.071909+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:41.078279+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:42.080647+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:43.087660+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:44.090461+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:45.099624+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:46.101450+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:47.609938+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:48.097517+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:49.103710+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:50.101813+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:51.108500+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:52.110392+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:53.118918+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:54.120033+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:55.124699+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:56.134243+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:57.136330+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:58.538247+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:12:59.140681+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:00.138964+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:01.145786+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:02.141590+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:03.142107+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:04.150704+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:05.146504+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:06.164893+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:07.157129+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:08.171877+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:09.459127+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:10.172237+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:11.176050+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:12.174085+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:13.180954+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:14.190146+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:15.176979+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:16.189616+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:17.187535+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:18.203221+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:19.197203+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:20.340445+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:21.216215+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:22.221415+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:23.225959+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:24.232758+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:25.236243+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:26.241349+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:27.243870+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:28.246604+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:29.252459+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:30.256156+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:31.778437+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:32.264221+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:33.268102+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:34.264288+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:35.275129+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:36.275598+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:37.273302+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:38.286452+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:39.291162+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:40.288858+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:41.288986+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:42.805092+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:43.293527+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:44.304957+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:45.319962+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:46.327419+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:47.331714+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:48.325073+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:49.340663+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:50.346401+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:51.345626+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:52.343505+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:53.347688+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:54.359832+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:55.364962+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:56.370134+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:57.376388+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:58.379307+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:13:59.384595+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:00.389123+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:01.379350+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:02.400155+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:04.116055+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:04.403699+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:05.405873+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:06.415088+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:07.422745+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:08.429951+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:09.439415+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:10.435479+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:11.444020+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:12.446767+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:13.457300+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:15.033714+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:15.468687+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:16.468883+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:17.473655+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:18.479880+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:19.486447+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:20.487113+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:21.505362+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:22.514031+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:23.519851+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:24.524386+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:25.989972+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:26.540911+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:27.544642+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:28.553899+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:29.561338+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:30.565147+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:31.567128+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:32.577517+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:33.580684+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:34.586360+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:35.591796+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:37.040073+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:37.603639+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:38.601554+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:39.611567+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:40.618160+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:41.621942+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:42.622704+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:43.633151+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:44.629822+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:45.639228+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:46.643488+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:47.943411+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:48.653700+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:49.658416+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:50.667237+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:51.672472+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:52.680275+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:53.687061+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:54.691697+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:55.693819+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:56.693394+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:57.728834+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:58.833243+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:14:59.729710+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:00.734345+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:01.738553+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:02.738739+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:03.735512+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:04.746643+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:05.756368+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:06.738270+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:07.760197+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:08.764687+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:09.865622+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:10.768986+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:11.779423+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:12.785828+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:13.788967+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:14.803059+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:15.787866+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:16.791163+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:17.796466+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:18.802227+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:19.815955+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:20.805550+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:21.824957+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:22.830487+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:23.828856+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:24.837815+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:25.843550+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:26.851683+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:27.852220+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:28.867560+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:29.861286+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:31.709730+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:31.865167+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:32.867601+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:33.875358+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:34.878288+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:35.886263+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:36.889329+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:37.887131+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:38.889596+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:39.894554+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:40.901515+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:42.680897+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:42.913761+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:43.922926+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:44.921830+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:45.926676+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:46.933501+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:47.938041+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:48.936321+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:49.943023+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:50.950697+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:51.956708+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:53.628634+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:53.972294+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:54.985744+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:55.978149+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:56.985653+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:57.990723+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:58.995169+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:15:59.989789+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:01.000258+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:02.004462+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:03.006381+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:04.521441+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:05.019368+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:06.023789+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:07.027173+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:08.035558+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:09.035107+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:10.035850+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:11.048355+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:12.054131+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:13.059763+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:14.079862+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:15.410214+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:16.071714+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:17.075225+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:18.078297+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:19.092666+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:20.091303+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:21.107765+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:22.100701+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:41.740578+00:00",
+      "equity_usd": 996.7339038930813
     },
     {
-      "timestamp_iso": "2026-05-25T19:16:23.124840+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:24.115876+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:25.116352+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:26.446341+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:27.134262+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:28.139632+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:29.141221+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:30.157360+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:31.145971+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:32.146837+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:33.155047+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:34.166181+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:35.164634+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:36.168370+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:37.682128+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:38.179363+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:39.177273+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:40.199761+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:41.203077+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:42.209240+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:43.215113+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:44.221443+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:45.215052+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:46.222564+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:47.219485+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:48.885307+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:49.234174+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:50.231994+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:51.243863+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:52.241696+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:53.255638+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:54.260589+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:55.270822+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:56.269243+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:57.274550+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:58.271781+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:16:59.896432+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:00.288640+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:01.294585+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:02.300058+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:03.316140+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:04.309671+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:05.314061+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:06.319224+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:07.324602+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:08.329536+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:09.335919+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:10.878220+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:11.342846+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:12.348164+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:13.355400+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:14.360027+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:15.364992+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:16.370459+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:17.374943+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:18.379053+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:19.383674+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:20.386756+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:21.779119+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:22.403307+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:23.399084+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:24.394211+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:25.402152+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:26.409886+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:27.416211+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:28.420854+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:29.424954+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:30.428520+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:31.436058+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:33.731771+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:33.751856+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:34.772340+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:35.768186+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:36.765860+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:37.787749+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:38.780041+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:39.782152+00:00",
-      "equity_usd": 1000.0
-    },
-    {
-      "timestamp_iso": "2026-05-25T19:17:40.789745+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:42.682432+00:00",
+      "equity_usd": 996.7339038930813
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:41.791902+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:43.689395+00:00",
+      "equity_usd": 996.7339038930813
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:42.810731+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:44.705536+00:00",
+      "equity_usd": 996.7339038930813
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:44.835653+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:45.702112+00:00",
+      "equity_usd": 996.7339038930813
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:44.854887+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:46.703449+00:00",
+      "equity_usd": 996.7339038930813
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:45.876042+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:47.715479+00:00",
+      "equity_usd": 996.7339038930813
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:46.886663+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:48.717344+00:00",
+      "equity_usd": 996.7339038930813
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:47.890816+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:49.722418+00:00",
+      "equity_usd": 996.7339038930813
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:48.905555+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:51.428696+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:49.892886+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:51.723259+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:50.907118+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:52.725901+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:51.905092+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:53.735316+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:52.962507+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:54.738862+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:53.917233+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:55.745736+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:55.808313+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:56.749500+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:55.917747+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:57.757494+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:56.931593+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:58.759926+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:57.935081+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:19:59.764486+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:58.937119+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:20:00.765539+00:00",
+      "equity_usd": 995.2409790339025
     },
     {
-      "timestamp_iso": "2026-05-25T19:17:59.943830+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:20:02.073584+00:00",
+      "equity_usd": 994.7964884393548
     },
     {
-      "timestamp_iso": "2026-05-25T19:18:00.947645+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:20:02.780101+00:00",
+      "equity_usd": 994.7964884393548
     },
     {
-      "timestamp_iso": "2026-05-25T19:18:01.947573+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:20:03.786636+00:00",
+      "equity_usd": 994.7964884393548
     },
     {
-      "timestamp_iso": "2026-05-25T19:18:02.952498+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:20:04.788612+00:00",
+      "equity_usd": 994.7964884393548
     },
     {
-      "timestamp_iso": "2026-05-25T19:18:03.962352+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:20:05.792936+00:00",
+      "equity_usd": 994.7964884393548
     },
     {
-      "timestamp_iso": "2026-05-25T19:18:04.955780+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:20:06.800938+00:00",
+      "equity_usd": 994.7964884393548
     },
     {
-      "timestamp_iso": "2026-05-25T19:18:06.821206+00:00",
-      "equity_usd": 1000.0
+      "timestamp_iso": "2026-05-25T19:20:07.805671+00:00",
+      "equity_usd": 994.7964884393548
     }
   ]
 }
