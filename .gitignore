@@ -26,6 +26,15 @@
 **/wallet_keys/
 **/*.privkey
 **/*.pem
+circle_ciphertext.txt
+circle_recovery.txt
+
+# Runtime audit store — local sqlite, can grow large; not source tree.
+# (`dashboard/data/snapshot.json` IS committed — that's what GH Pages
+# serves.)
+audit.sqlite
+audit.sqlite-shm
+audit.sqlite-wal
 
 # Local config overrides
 configs/*.local.json
