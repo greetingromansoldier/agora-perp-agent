@@ -178,7 +178,7 @@ class CircleAnchor:
         """
         hash_bytes = anchor_hash(record)
         hash_hex = "0x" + hash_bytes.hex()
-        description = f"agora:{record.audit_id}:{hash_hex}"
+        description = _build_description(record, hash_hex)
         expired_at = int(
             (
                 datetime.now(timezone.utc) + timedelta(hours=expiry_hours)
@@ -342,6 +342,70 @@ class CircleAnchor:
 
 
 # ------------------------------------------------------------ helpers
+
+
+def _build_description(record: AuditRecord, hash_hex: str) -> str:
+    """Compose a human-readable on-chain description for arcscan viewers.
+
+    Format (`|`-separated for grep, ~180 chars):
+
+        agora | <short_id> | <ASSET> | <L/S> | <qty>@<lev>x |
+            $<notional> | <tier> | <regime> |
+            stop=<stop> take=<take> | edge=<edge_bps>bps |
+            hash=<keccak>
+
+    Anyone reading the tx on arcscan sees the trade summary first;
+    `hash=...` is appended for cryptographic verification against the
+    off-chain audit record (`keccak256(canonical_json + nonce)`).
+
+    Short fields kept compact so the description fits comfortably in
+    one tx without inflating gas (each char ≈ 16 gas; ~180 chars =
+    ~2.8 k gas on top of the createJob base cost).
+    """
+    short_id = record.audit_id[:8]
+    parts: list[str] = [f"agora|{short_id}|{record.asset}"]
+
+    if record.side:
+        parts.append("L" if record.side == "long" else "S")
+    else:
+        parts.append("?")
+
+    sized = record.sized or {}
+    qty = sized.get("qty")
+    notional = sized.get("notional_usd")
+    leverage = sized.get("leverage")
+    tier = sized.get("tier")
+    trend = sized.get("regime_trend")
+    vol = sized.get("regime_vol")
+    fund = sized.get("regime_funding")
+    stop = sized.get("stop_price")
+    take = sized.get("take_price")
+
+    if qty is not None and leverage is not None:
+        parts.append(f"{qty:.6f}@{leverage:.1f}x")
+    if notional is not None:
+        parts.append(f"${notional:.0f}")
+    if tier:
+        parts.append(str(tier))
+    if trend and vol and fund:
+        parts.append(f"{_compact(trend)}*{_compact(vol)}*{_compact(fund)}")
+    if stop is not None and take is not None:
+        parts.append(f"stop={stop:.2f} take={take:.2f}")
+
+    parts.append(f"hash={hash_hex}")
+    return "|".join(parts)
+
+
+_REGIME_SHORT = {
+    "UP": "UP", "DOWN": "DN", "RANGE": "RG",
+    "COMPRESSED": "CMP", "NORMAL": "NRM", "EXPANDED": "EXP", "CRISIS": "CRI",
+    "NEUTRAL": "NEU", "BULL_BIAS": "B+", "BEAR_BIAS": "B-",
+    "EXTREME_POS": "E+", "EXTREME_NEG": "E-",
+}
+
+
+def _compact(label: str) -> str:
+    return _REGIME_SHORT.get(label, label[:4])
 
 
 def _load_env(env_path: Path) -> dict[str, str]:
