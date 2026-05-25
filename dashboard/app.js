@@ -401,71 +401,116 @@ function renderPositions(positions) {
     .join("");
 }
 
-function renderDecisions(decisions) {
+/**
+ * Render the unified activity feed: opens + closes interleaved.
+ *
+ * Each entry has an `action` field — "open" for new positions, "close"
+ * for closures (with trigger ∈ {stop, take, cut, flip, manual}). Cards
+ * are color-coded by action and show different info: opens show
+ * sizing + LLM rationale, closes show realized PnL + held duration.
+ */
+function renderActivity(decisions) {
   const root = document.getElementById("decisions");
   if (!root) return;
   if (!Array.isArray(decisions) || decisions.length === 0) {
-    root.innerHTML = `<div class="placeholder muted">(no decisions yet)</div>`;
+    root.innerHTML = `<div class="placeholder muted">(no activity yet — agent is warming up)</div>`;
     return;
   }
   root.innerHTML = decisions
-    .slice(0, 20)
-    .map((d) => {
-      const txLink = d.arc_tx_hash
-        ? `<a href="${d.arcscan_url || `https://testnet.arcscan.app/tx/${d.arc_tx_hash}`}" target="_blank" class="tx-link">arcscan ${abbreviate(d.arc_tx_hash, 6, 4)} ↗</a>`
-        : (d.anchor_state === "pending"
-          ? `<span class="anchor-pending">anchoring…</span>`
-          : d.anchor_state === "off"
-            ? `<span class="muted">no anchor</span>`
-            : "");
-      const sizeBits = [];
-      if (d.tier) sizeBits.push(d.tier);
-      if (d.regime) sizeBits.push(d.regime);
-      if (d.leverage != null) sizeBits.push(`${d.leverage.toFixed(1)}× lev`);
-      if (d.notional_usd != null) sizeBits.push(`${fmtUsd(d.notional_usd)} notional`);
-      if (d.stop_price != null) sizeBits.push(`stop ${fmtNum(d.stop_price, 2)}`);
-      if (d.take_price != null) sizeBits.push(`take ${fmtNum(d.take_price, 2)}`);
-
-      return `<div class="decision">
-        <div class="decision-head">
-          <span class="verdict verdict-${(d.verdict || "EXECUTE").toLowerCase()}">${d.verdict || "EXECUTE"}</span>
-          <strong>${d.asset}</strong>
-          <span class="side-${d.side || ""}">${(d.side || "").toUpperCase()}</span>
-          <span class="muted">${d.decision_id || ""}</span>
-          <span class="muted">${formatTimestamp(d.decided_at_iso)}</span>
-          ${txLink}
-        </div>
-        ${sizeBits.length ? `<div class="decision-size">${sizeBits.map(b => `<code>${b}</code>`).join(" · ")}</div>` : ""}
-        ${d.reasoning ? `<div class="decision-reasoning">${escapeHtml(d.reasoning)}</div>` : ""}
-      </div>`;
-    })
+    .slice(0, 30)
+    .map(renderActivityItem)
     .join("");
 }
 
-function renderHistory(history) {
-  const tbody = document.querySelector("#history tbody");
-  if (!tbody) return;
-  if (!Array.isArray(history) || history.length === 0) {
-    tbody.innerHTML = `<tr class="placeholder"><td colspan="8">(no closed trades yet)</td></tr>`;
-    return;
+const VERB_LABELS = {
+  open: "opened",
+  close: "closed",
+  stop: "stopped out",
+  take: "took profit",
+  cut: "cut by agent",
+  flip: "flipped",
+  manual: "closed",
+};
+
+function renderActivityItem(d) {
+  const isClose = d.action === "close";
+  const verbKey = isClose ? (d.trigger || "close") : "open";
+  const verbLabel = VERB_LABELS[verbKey] || verbKey;
+  const sideClass = d.side === "long" ? "act-side-long" : "act-side-short";
+  const sideLabel = (d.side || "").toUpperCase();
+
+  const txLink = d.arc_tx_hash
+    ? `<a href="${d.arcscan_url || `https://testnet.arcscan.app/tx/${d.arc_tx_hash}`}" target="_blank" class="tx-link">verify on arc ${abbreviate(d.arc_tx_hash, 6, 4)} ↗</a>`
+    : (!isClose && d.anchor_state === "pending"
+      ? `<span class="anchor-pending">anchoring on arc…</span>`
+      : "");
+
+  if (isClose) {
+    return renderCloseCard(d, verbKey, verbLabel, sideClass, sideLabel, txLink);
   }
-  tbody.innerHTML = history
-    .slice(0, 50)
-    .map((t) => {
-      const pnlClass = t.realized_pnl_usd >= 0 ? "pnl-pos" : "pnl-neg";
-      const regime = t.regime || "—";
-      return `<tr>
-        <td class="when">${formatTimestamp(t.exit_time_iso)}</td>
-        <td><strong>${t.asset}</strong></td>
-        <td class="${t.side === 'long' ? 'side-long' : 'side-short'}">${(t.side || "").toUpperCase()}</td>
-        <td>${fmtNum(t.qty, 6)}</td>
-        <td>${fmtNum(t.entry_price, 2)}</td>
-        <td>${fmtNum(t.exit_price, 2)}</td>
-        <td class="${pnlClass}">${fmtUsd(t.realized_pnl_usd, true)}</td>
-        <td><code>${regime}</code></td>
-      </tr>`;
-    })
-    .join("");
+  return renderOpenCard(d, verbKey, verbLabel, sideClass, sideLabel, txLink);
+}
+
+function renderOpenCard(d, verbKey, verbLabel, sideClass, sideLabel, txLink) {
+  const meta = [];
+  if (d.leverage != null) meta.push(`<strong>${d.leverage.toFixed(1)}×</strong> lev`);
+  if (d.notional_usd != null) meta.push(`${fmtUsd(d.notional_usd)} notional`);
+  if (d.qty != null) meta.push(`qty ${fmtNum(d.qty, 4)}`);
+  if (d.stop_price != null) meta.push(`stop ${fmtNum(d.stop_price, 2)}`);
+  if (d.take_price != null) meta.push(`take ${fmtNum(d.take_price, 2)}`);
+  if (d.tier) meta.push(`tier <strong>${d.tier}</strong>`);
+  if (d.regime) meta.push(`regime <strong>${d.regime}</strong>`);
+
+  return `
+    <div class="act act-${verbKey}">
+      <div class="act-head">
+        <span class="act-verb act-verb-${verbKey}">${verbLabel}</span>
+        <span class="act-asset">${d.asset || "?"}</span>
+        <span class="${sideClass}">${sideLabel}</span>
+        <span class="audit-id">${d.decision_id || ""}</span>
+        <span class="act-when" title="${d.decided_at_iso || ""}">${formatTimestamp(d.decided_at_iso)}</span>
+      </div>
+      ${meta.length ? `<div class="act-meta">${meta.join('<span class="act-meta-sep">·</span>')}</div>` : ""}
+      ${d.reasoning ? `<div class="act-reason">“${escapeHtml(d.reasoning)}”</div>` : ""}
+      ${txLink ? `<div class="act-foot">${txLink}</div>` : ""}
+    </div>`;
+}
+
+function renderCloseCard(d, verbKey, verbLabel, sideClass, sideLabel, txLink) {
+  const pnlClass = d.realized_pnl_usd >= 0 ? "act-pnl-pos" : "act-pnl-neg";
+  const pnlText = fmtUsd(d.realized_pnl_usd, true);
+  const pnlPct = d.realized_pnl_pct != null
+    ? ` <span class="muted">(${d.realized_pnl_pct >= 0 ? "+" : ""}${d.realized_pnl_pct.toFixed(2)}%)</span>` : "";
+  const heldText = d.held_seconds != null ? fmtDuration(d.held_seconds) : null;
+
+  const meta = [];
+  if (d.entry_price != null && d.exit_price != null) {
+    meta.push(`entry ${fmtNum(d.entry_price, 2)} → exit ${fmtNum(d.exit_price, 2)}`);
+  }
+  if (d.qty != null) meta.push(`qty ${fmtNum(d.qty, 4)}`);
+  if (d.leverage != null) meta.push(`<strong>${d.leverage.toFixed(1)}×</strong> lev`);
+  if (heldText) meta.push(`held ${heldText}`);
+  if (d.tier) meta.push(`tier <strong>${d.tier}</strong>`);
+
+  return `
+    <div class="act act-${verbKey}">
+      <div class="act-head">
+        <span class="act-verb act-verb-${verbKey}">${verbLabel}</span>
+        <span class="act-asset">${d.asset || "?"}</span>
+        <span class="${sideClass}">${sideLabel}</span>
+        <span class="${pnlClass}">${pnlText}${pnlPct}</span>
+        <span class="act-when" title="${d.decided_at_iso || ""}">${formatTimestamp(d.decided_at_iso)}</span>
+      </div>
+      ${meta.length ? `<div class="act-meta">${meta.join('<span class="act-meta-sep">·</span>')}</div>` : ""}
+      ${txLink ? `<div class="act-foot">${txLink}</div>` : ""}
+    </div>`;
+}
+
+function fmtDuration(seconds) {
+  if (seconds == null || Number.isNaN(seconds)) return "—";
+  if (seconds < 60) return `${Math.round(seconds)}s`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${Math.round(seconds % 60)}s`;
+  return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
 }
 
 function escapeHtml(s) {
@@ -479,39 +524,76 @@ function escapeHtml(s) {
 async function refreshSnapshot() {
   const snap = await fetchSnapshot();
   if (!snap) {
-    setText("stat-equity", "—");
-    setText("stat-realized", "—");
-    setText("stat-open", "—");
+    ["stat-equity", "stat-balance", "stat-realized",
+     "stat-unrealized", "stat-open", "stat-anchors"]
+      .forEach((id) => setText(id, "—"));
+    setText("stat-equity-delta", "snapshot not yet published");
     return;
   }
+
   setText("stat-equity", fmtUsd(snap.equity_usd));
-  setText(
-    "stat-realized",
-    fmtUsd(snap.realized_pnl_usd, true)
-  );
-  const realizedEl = document.getElementById("stat-realized");
-  if (realizedEl) {
-    realizedEl.className = "value " + (snap.realized_pnl_usd >= 0 ? "pnl-pos" : "pnl-neg");
-  }
+  setText("stat-balance", fmtUsd(snap.balance_usd));
+  setText("stat-realized", fmtUsd(snap.realized_pnl_usd, true));
+  setText("stat-unrealized", fmtUsd(snap.unrealized_pnl_usd, true));
   setText("stat-open", (snap.open_positions || []).length.toString());
+
+  // Anchor count from snapshot itself — every decision with an
+  // `arc_tx_hash` is one ERC-8183 anchor we've placed.
+  const anchorCount = (snap.recent_decisions || []).filter(
+    (d) => d.arc_tx_hash,
+  ).length;
+  setText("stat-anchors", anchorCount.toString());
+
+  // Equity delta vs starting balance — show % and absolute.
+  if (snap.starting_balance_usd > 0) {
+    const delta = snap.equity_usd - snap.starting_balance_usd;
+    const pct = (delta / snap.starting_balance_usd) * 100;
+    const sign = delta >= 0 ? "+" : "−";
+    setText(
+      "stat-equity-delta",
+      `${sign}${Math.abs(pct).toFixed(2)}% · ${fmtUsd(delta, true)} from $${snap.starting_balance_usd.toFixed(0)}`,
+    );
+  }
+
+  // Color realised/unrealised
+  for (const [id, value] of [
+    ["stat-realized", snap.realized_pnl_usd],
+    ["stat-unrealized", snap.unrealized_pnl_usd],
+  ]) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.className = "value " + (value >= 0 ? "pnl-pos" : "pnl-neg");
+    }
+  }
 
   // Snapshot freshness — overrides the generic "last update" stat so
   // viewers see "bot's data is X minutes old" rather than just when the
-  // browser last refreshed.
+  // browser last polled. Cache the iso on the DOM node so the 5s
+  // tick-interval can re-format without refetching.
   if (snap.generated_at_iso) {
-    setText("stat-updated", formatTimestamp(snap.generated_at_iso));
+    const node = document.getElementById("stat-updated");
+    if (node) {
+      node.textContent = formatTimestamp(snap.generated_at_iso);
+      node.dataset.iso = snap.generated_at_iso;
+    }
   }
 
   renderEquityChart(snap.equity_curve, snap.starting_balance_usd);
   renderPositions(snap.open_positions);
-  renderDecisions(snap.recent_decisions);
-  renderHistory(snap.trade_history);
+  renderActivity(snap.recent_decisions);
 }
 
 // ---------------------------------------------------------------- boot
 
 renderHeader();
-refresh();
 refreshSnapshot();
-setInterval(refresh, REFRESH_MS);
 setInterval(refreshSnapshot, SNAPSHOT_REFRESH_MS);
+
+// Tick relative-time labels every 5s so "X seconds ago" decays even
+// between snapshot fetches. Reads the most-recent iso back from the
+// DOM (set by refreshSnapshot) — no network hit.
+setInterval(() => {
+  const node = document.getElementById("stat-updated");
+  if (!node || !node.dataset.iso) return;
+  setText("stat-updated", formatTimestamp(node.dataset.iso));
+}, 5000);

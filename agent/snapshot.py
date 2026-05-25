@@ -153,9 +153,38 @@ class SnapshotState:
         entry_time_iso: str,
         exit_time_iso: str,
         accrued_funding_usd: float,
+        trigger: str = "manual",
     ) -> None:
-        """Append one closed-trade entry to trade_history; clear audit link."""
+        """Move position out of `audit_links` and into history + activity.
+
+        Close events also surface in `recent_decisions` so the dashboard
+        timeline shows opens AND closes interleaved — viewer reads each
+        trade as a story, not just a wall of openings.
+
+        Args:
+            trigger: ``"stop"`` | ``"take"`` | ``"cut"`` | ``"flip"`` |
+                ``"manual"``. Drives the action verb shown in the feed.
+        """
         link = self.audit_links.pop(asset, {})
+
+        try:
+            held_seconds = max(
+                0.0,
+                (
+                    datetime.fromisoformat(exit_time_iso)
+                    - datetime.fromisoformat(entry_time_iso)
+                ).total_seconds(),
+            )
+        except (ValueError, TypeError):
+            held_seconds = None
+
+        pnl_pct: float | None = None
+        try:
+            if entry_price > 0 and qty > 0:
+                pnl_pct = realized_pnl_usd / (entry_price * qty) * 100.0
+        except (TypeError, ZeroDivisionError):
+            pass
+
         self.trade_history.appendleft(
             {
                 "asset": asset,
@@ -167,6 +196,7 @@ class SnapshotState:
                 "accrued_funding_usd": float(accrued_funding_usd),
                 "entry_time_iso": entry_time_iso,
                 "exit_time_iso": exit_time_iso,
+                "held_seconds": held_seconds,
                 "audit_id": link.get("audit_id"),
                 "decision_id": link.get("decision_id"),
                 "leverage_at_open": link.get("leverage"),
@@ -174,11 +204,46 @@ class SnapshotState:
                 "regime": link.get("regime"),
                 "arc_tx_hash": link.get("arc_tx_hash"),
                 "arcscan_url": link.get("arcscan_url"),
+                "trigger": trigger,
+            }
+        )
+        self.record_decision(
+            {
+                "audit_id": f"close-{asset}-{exit_time_iso}",
+                "decision_id": link.get("decision_id"),
+                "asset": asset,
+                "side": side,
+                "action": "close",
+                "trigger": trigger,
+                "qty": float(qty),
+                "entry_price": float(entry_price),
+                "exit_price": float(exit_price),
+                "realized_pnl_usd": float(realized_pnl_usd),
+                "realized_pnl_pct": pnl_pct,
+                "held_seconds": held_seconds,
+                "leverage": link.get("leverage"),
+                "tier": link.get("tier"),
+                "regime": link.get("regime"),
+                "open_audit_id": link.get("audit_id"),
+                "arc_tx_hash": link.get("arc_tx_hash"),
+                "arcscan_url": link.get("arcscan_url"),
+                "decided_at_iso": exit_time_iso,
+                "anchor_state": "n/a",
             }
         )
 
     def record_decision(self, entry: dict[str, Any]) -> None:
-        """Append one decision (from LLM emit, post-`_apply`)."""
+        """Append one decision; replace any existing with same audit_id.
+
+        Dedup-by-audit_id prevents the same trade showing twice when the
+        audit store has both pre-anchor and post-anchor rows for one
+        decision. Without dedup, hydration appends both versions.
+        """
+        audit_id = entry.get("audit_id")
+        if audit_id:
+            for existing in list(self.recent_decisions):
+                if existing.get("audit_id") == audit_id:
+                    self.recent_decisions.remove(existing)
         self.recent_decisions.appendleft(entry)
 
     def tick(self) -> None:
@@ -202,18 +267,27 @@ def hydrate_from_audit_store(
         state: empty `SnapshotState` to populate.
         store: an `agent.audit.AuditStore`.
     """
-    rows = store._conn.execute(  # noqa: SLF001 — internal cross-module access
-        """
-        SELECT record_json FROM audit_records
-        ORDER BY rowid ASC
-        """
-    ).fetchall()
     import json as _json  # noqa: PLC0415
 
-    for (blob,) in rows:
-        rec = _json.loads(blob)
-        if rec.get("verdict") != "EXECUTE":
+    # Dedup: take only the latest row per audit_id. Without this, multi-row
+    # audits (pre-anchor + post-anchor) double-count in the activity feed.
+    distinct = store._conn.execute(  # noqa: SLF001 — internal cross-module
+        """
+        SELECT audit_id, MAX(rowid)
+        FROM audit_records
+        WHERE verdict = 'EXECUTE'
+        GROUP BY audit_id
+        ORDER BY MAX(rowid) ASC
+        """
+    ).fetchall()
+    for audit_id, max_rowid in distinct:
+        row = store._conn.execute(  # noqa: SLF001
+            "SELECT record_json FROM audit_records WHERE rowid = ?",
+            (max_rowid,),
+        ).fetchone()
+        if row is None:
             continue
+        rec = _json.loads(row[0])
         sized = rec.get("sized") or {}
         tx_hash = rec.get("arc_tx_hash")
         state.record_decision(
@@ -222,7 +296,7 @@ def hydrate_from_audit_store(
                 "decision_id": rec.get("decision_id"),
                 "asset": rec.get("asset"),
                 "side": rec.get("side"),
-                "action": "enter",
+                "action": "open",
                 "verdict": rec.get("verdict"),
                 "tier": sized.get("tier"),
                 "regime": (
@@ -235,7 +309,7 @@ def hydrate_from_audit_store(
                 "take_price": sized.get("take_price"),
                 "notional_usd": sized.get("notional_usd"),
                 "qty": sized.get("qty"),
-                "entry_price": None,  # not stored on the record itself
+                "entry_price": None,
                 "edge_after_cost_bps": None,
                 "reasoning": rec.get("reasoning"),
                 "decided_at_iso": rec.get("decided_at_iso"),

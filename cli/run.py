@@ -764,7 +764,7 @@ def _enter_sized(
                     "decision_id": decision.rationale.decision_id,
                     "asset": decision.asset,
                     "side": decision.side,
-                    "action": "enter",
+                    "action": "open",
                     "verdict": audit.Verdict.EXECUTE.value,
                     "tier": str(sized.tier),
                     "regime": regime_short,
@@ -844,6 +844,7 @@ def _apply(
                 entry_time_iso=entry_time_iso,
                 exit_time_iso=fill.timestamp.isoformat(),
                 accrued_funding_usd=funding_pre,
+                trigger="cut",
             )
         return decision
 
@@ -869,6 +870,7 @@ def _apply(
                     entry_time_iso=entry_time_iso,
                     exit_time_iso=fill.timestamp.isoformat(),
                     accrued_funding_usd=funding_pre,
+                    trigger="flip",
                 )
         return _enter_sized(
             decision, snap, board,
@@ -944,13 +946,28 @@ def step(
             pre_qty = pos.qty
             pre_side = pos.side
             pre_funding = pos.accrued_funding_usd
+            pre_stop = pos.stop_price
+            pre_take = pos.take_price
         else:
-            pre_entry_time_iso = pre_entry_price = pre_qty = pre_side = pre_funding = None  # type: ignore[assignment]
+            pre_entry_time_iso = pre_entry_price = pre_qty = pre_side = pre_funding = pre_stop = pre_take = None  # type: ignore[assignment]
         closed = executor.check_stops(snap, portfolio)
         if closed is not None:
             recent_fills.append(closed)
             _LAST_SIZED.pop(asset, None)
             if snap_state is not None and pre_qty is not None:
+                # Infer which level fired so the activity feed can say
+                # "stopped out" vs "took profit" instead of generic "closed".
+                trigger = "stop"
+                exit_price = closed.price
+                if pre_take is not None:
+                    long_hit_take = (
+                        pre_side == "long" and exit_price >= pre_take
+                    )
+                    short_hit_take = (
+                        pre_side == "short" and exit_price <= pre_take
+                    )
+                    if long_hit_take or short_hit_take:
+                        trigger = "take"
                 snap_state.record_close(
                     asset=asset,
                     side=pre_side,
@@ -961,6 +978,7 @@ def step(
                     entry_time_iso=pre_entry_time_iso,
                     exit_time_iso=closed.timestamp.isoformat(),
                     accrued_funding_usd=pre_funding,
+                    trigger=trigger,
                 )
 
     board: dict[str, tuple[Forecast, CostAssessment]] = {}

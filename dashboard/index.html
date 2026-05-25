@@ -33,13 +33,22 @@
       </header>
 
       <section class="stats">
-        <div class="stat">
+        <div class="stat stat-hero">
           <span class="label">equity</span>
           <span class="value" id="stat-equity">…</span>
+          <span class="sub" id="stat-equity-delta">vs starting —</span>
+        </div>
+        <div class="stat">
+          <span class="label">balance (cash)</span>
+          <span class="value" id="stat-balance">…</span>
         </div>
         <div class="stat">
           <span class="label">realized pnl</span>
           <span class="value" id="stat-realized">…</span>
+        </div>
+        <div class="stat">
+          <span class="label">unrealized pnl</span>
+          <span class="value" id="stat-unrealized">…</span>
         </div>
         <div class="stat">
           <span class="label">open positions</span>
@@ -54,7 +63,7 @@
           <a class="value mono" id="stat-wallet" href="#" target="_blank">…</a>
         </div>
         <div class="stat">
-          <span class="label">last update</span>
+          <span class="label">snapshot age</span>
           <span class="value" id="stat-updated">…</span>
         </div>
       </section>
@@ -109,178 +118,103 @@
       </section>
 
       <section>
-        <h2>Recent decisions</h2>
+        <h2>Recent activity</h2>
         <p class="muted">
-          LLM rationale + sizing breakdown for each EXECUTE action. The
-          on-chain anchor pins the keccak256 of the audit record to
-          this exact decision; click the tx link to verify.
+          Live timeline — every open, close, stop-out, and take-profit
+          from the running agent. Closures show realized PnL and how
+          long the position was held. Each anchored event carries an
+          arcscan link verifying the decision on Arc.
         </p>
-        <div class="decisions" id="decisions">
-          <div class="placeholder muted">(no decisions yet)</div>
+        <div class="activity" id="decisions">
+          <div class="placeholder muted">(no activity yet — agent is warming up)</div>
         </div>
       </section>
 
       <section>
-        <h2>Trade history</h2>
+        <h2>Architecture</h2>
         <p class="muted">
-          Closed positions with realized PnL. Continuous across runs —
-          hydrated from the audit sqlite store.
+          Three phases pipe data → decision → on-chain receipt. The
+          deterministic core (sensing, sizing, risk, execution) is
+          public Python; the LLM is consulted but never picks size or
+          leverage; the on-chain anchor commits to the exact state the
+          call was made on.
         </p>
-        <div class="table-wrap">
-          <table id="history">
-            <thead>
-              <tr>
-                <th>closed</th>
-                <th>coin</th>
-                <th>side</th>
-                <th>qty</th>
-                <th>entry</th>
-                <th>exit</th>
-                <th>pnl</th>
-                <th>regime</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="placeholder">
-                <td colspan="8">(no closed trades yet)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section>
-        <h2>Live anchor feed</h2>
-        <p class="muted">
-          Every row is one decision the agent committed to Arc. Click an
-          arcscan link to inspect the transaction directly on-chain.
-          <code>description</code> holds <code>agora:&lt;audit_id&gt;:&lt;keccak256(record||nonce)&gt;</code>
-          — the audit-record anchor hash. The off-chain record is reproducible
-          from the same nonce.
-        </p>
-        <div class="table-wrap">
-          <table id="feed">
-            <thead>
-              <tr>
-                <th>when</th>
-                <th>audit id</th>
-                <th>anchor hash</th>
-                <th>tx</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="placeholder">
-                <td colspan="4">loading anchors from Arc…</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section>
-        <h2>How a decision becomes an anchor</h2>
-        <div class="pipeline">
-          <!-- ============================ SENSE ============================ -->
-          <div class="phase phase-sense">
-            <div class="phase-header">
-              <span class="phase-glyph">◆</span>
-              <span class="phase-label">SENSE</span>
-              <span class="phase-tag">live market state</span>
-            </div>
-            <div class="step">
-              <span class="step-num">01</span>
-              <div class="step-body">
-                <div class="step-title">data</div>
-                <div class="step-desc">L2 order book + 5-minute candles + funding rate streamed from Hyperliquid over WebSocket</div>
+        <div class="arch">
+          <div class="arch-col arch-sense">
+            <div class="arch-phase">
+              <span class="arch-dot">◆</span>
+              <div class="arch-meta">
+                <span class="arch-name">SENSE</span>
+                <span class="arch-sub">live market state</span>
               </div>
             </div>
-            <div class="step">
-              <span class="step-num">02</span>
-              <div class="step-body">
-                <div class="step-title">forecast</div>
-                <div class="step-desc">Logistic classifier over ATR · EMA · SMA · RSI · ADX · realized-vol</div>
-              </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">data</span>
+              <span class="arch-chip-sub">WS L2 + 5m candles + funding</span>
             </div>
-            <div class="step">
-              <span class="step-num">03</span>
-              <div class="step-body">
-                <div class="step-title">cost</div>
-                <div class="step-desc">Fees + sqrt-law slippage + signed funding for the expected hold horizon</div>
-              </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">forecast</span>
+              <span class="arch-chip-sub">logistic over ATR/EMA/RSI/ADX</span>
             </div>
-            <div class="step">
-              <span class="step-num">04</span>
-              <div class="step-body">
-                <div class="step-title">allocate</div>
-                <div class="step-desc">Rank candidates by edge after cost; only positive edge survives</div>
-              </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">cost</span>
+              <span class="arch-chip-sub">fees + √-slippage + funding</span>
+            </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">allocate</span>
+              <span class="arch-chip-sub">rank by edge after cost</span>
             </div>
           </div>
 
-          <!-- =========================== DECIDE ============================ -->
-          <div class="phase phase-decide">
-            <div class="phase-header">
-              <span class="phase-glyph">▲</span>
-              <span class="phase-label">DECIDE</span>
-              <span class="phase-tag">LLM + deterministic math</span>
-            </div>
-            <div class="step">
-              <span class="step-num">05</span>
-              <div class="step-body">
-                <div class="step-title">LLM agent</div>
-                <div class="step-desc">Gemini 3.1 Pro reads the board, picks <em>which</em> to trade and explains <em>why</em>. Never picks <em>how big</em>.</div>
+          <div class="arch-conn arch-conn-1">›</div>
+
+          <div class="arch-col arch-decide">
+            <div class="arch-phase">
+              <span class="arch-dot">▲</span>
+              <div class="arch-meta">
+                <span class="arch-name">DECIDE</span>
+                <span class="arch-sub">LLM + math</span>
               </div>
             </div>
-            <div class="step">
-              <span class="step-num">06</span>
-              <div class="step-body">
-                <div class="step-title">sizing</div>
-                <div class="step-desc"><code>classify_tier</code> → 3-axis regime → playbook multiplier → vol target → ATR stops → 3-cap leverage → funding-drag check</div>
-              </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">LLM agent</span>
+              <span class="arch-chip-sub">picks which to trade · explains why</span>
             </div>
-            <div class="step">
-              <span class="step-num">07</span>
-              <div class="step-body">
-                <div class="step-title">risk gate</div>
-                <div class="step-desc">5-rule veto: edge floor, uniqueness, max positions, per-position cap, total exposure</div>
-              </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">sizing layer</span>
+              <span class="arch-chip-sub">tier × regime × ATR stops × leverage</span>
+            </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">risk gate</span>
+              <span class="arch-chip-sub">5-rule veto · edge/cap/exposure</span>
             </div>
           </div>
 
-          <!-- =========================== COMMIT ============================ -->
-          <div class="phase phase-commit">
-            <div class="phase-header">
-              <span class="phase-glyph">●</span>
-              <span class="phase-label">COMMIT</span>
-              <span class="phase-tag">verifiable on Arc</span>
-            </div>
-            <div class="step">
-              <span class="step-num">08</span>
-              <div class="step-body">
-                <div class="step-title">paper execute</div>
-                <div class="step-desc"><code>SimExecutor.open_sized</code> registers stop / take on the position; <code>check_stops</code> fires every tick</div>
+          <div class="arch-conn arch-conn-2">›</div>
+
+          <div class="arch-col arch-commit">
+            <div class="arch-phase">
+              <span class="arch-dot">●</span>
+              <div class="arch-meta">
+                <span class="arch-name">COMMIT</span>
+                <span class="arch-sub">verifiable on Arc</span>
               </div>
             </div>
-            <div class="step">
-              <span class="step-num">09</span>
-              <div class="step-body">
-                <div class="step-title">audit record</div>
-                <div class="step-desc">keccak256(canonical_json + nonce) → sqlite write-ahead, before any external effect</div>
-              </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">execute</span>
+              <span class="arch-chip-sub">open with stop / take</span>
             </div>
-            <div class="step">
-              <span class="step-num">10</span>
-              <div class="step-body">
-                <div class="step-title">on-chain anchor</div>
-                <div class="step-desc">ERC-8183 <code>createJob</code> via Circle's Contract Execution API. Hash lives in the on-chain description.</div>
-              </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">audit record</span>
+              <span class="arch-chip-sub">keccak256 + nonce → sqlite</span>
             </div>
-            <div class="step step-final">
-              <span class="step-num">11</span>
-              <div class="step-body">
-                <div class="step-title">tx_hash on Arc <span class="pulse">live</span></div>
-                <div class="step-desc">arcscan link in the decision feed and the open positions table — click to verify</div>
-              </div>
+            <div class="arch-chip">
+              <span class="arch-chip-title">on-chain anchor</span>
+              <span class="arch-chip-sub">ERC-8183 createJob on Arc</span>
+            </div>
+            <div class="arch-chip arch-chip-pulse">
+              <span class="arch-chip-title">tx on Arc <span class="pulse">live</span></span>
+              <span class="arch-chip-sub">arcscan-verifiable receipt</span>
             </div>
           </div>
         </div>
