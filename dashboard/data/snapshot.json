@@ -1,23 +1,23 @@
 {
   "schema_version": "v1",
-  "generated_at_iso": "2026-05-28T03:26:57.636424+00:00",
+  "generated_at_iso": "2026-05-28T03:28:03.341877+00:00",
   "agent_wallet": "0x5b09fc1d4a519b4591217fb5d06247159b9fcf44",
   "starting_balance_usd": 1000.0,
-  "equity_usd": 946.2671303197836,
-  "balance_usd": 941.1078889441426,
-  "realized_pnl_usd": -58.89211105585741,
-  "unrealized_pnl_usd": 5.159241375641051,
-  "agent_status": "idle",
-  "ticks_processed": 180151,
+  "equity_usd": 944.9981655827562,
+  "balance_usd": 937.718410097479,
+  "realized_pnl_usd": -62.28158990252098,
+  "unrealized_pnl_usd": 7.279755485277157,
+  "agent_status": "thinking",
+  "ticks_processed": 180216,
   "open_positions": [
     {
       "asset": "ARB",
       "side": "short",
       "qty": 700.968883775323,
       "entry_price": 0.10838816651305452,
-      "mark_price": 0.10508,
-      "notional_usd": 73.65781030711095,
-      "unrealized_pnl_usd": 2.318921787998727,
+      "mark_price": 0.105,
+      "notional_usd": 73.60173279640891,
+      "unrealized_pnl_usd": 2.3749992987007604,
       "accrued_funding_usd": 0.00218241719542834,
       "stop_price": 0.11128393673892398,
       "take_price": 0.10407409489161401,
@@ -36,9 +36,9 @@
       "side": "short",
       "qty": 2152.6573418380026,
       "entry_price": 0.10038202364029596,
-      "mark_price": 0.099443,
-      "notional_usd": 214.0667040443965,
-      "unrealized_pnl_usd": 2.021396133442529,
+      "mark_price": 0.099453,
+      "notional_usd": 214.08823061781487,
+      "unrealized_pnl_usd": 1.9998695600241576,
       "accrued_funding_usd": 0.015394181785062692,
       "stop_price": 0.10204609325551248,
       "take_price": 0.09790586011673126,
@@ -53,34 +53,13 @@
       "anchor_state": "complete"
     },
     {
-      "asset": "LINK",
-      "side": "short",
-      "qty": 15.389220014270123,
-      "entry_price": 9.143934659643993,
-      "mark_price": 9.0484,
-      "notional_usd": 139.2478183771218,
-      "unrealized_pnl_usd": 1.4702038962498007,
-      "accrued_funding_usd": 0.014051505770236115,
-      "stop_price": 9.324045324744262,
-      "take_price": 8.87718201288361,
-      "entry_time_iso": "2026-05-27T22:15:00+00:00",
-      "tier": "T3",
-      "regime": "RG\u00b7NORM\u00b7NEU",
-      "leverage": 7.801517486538979,
-      "audit_id": "b870ea2d-7778-4383-9636-63b76b9e1d4a",
-      "decision_id": "d-0009",
-      "arc_tx_hash": "0xfe1aef86474921c68a49b46c88d6b47577803fa8570a94e83ddc2534e9633e5b",
-      "arcscan_url": "https://testnet.arcscan.app/tx/0xfe1aef86474921c68a49b46c88d6b47577803fa8570a94e83ddc2534e9633e5b",
-      "anchor_state": "complete"
-    },
-    {
       "asset": "OP",
       "side": "short",
       "qty": 674.0065262380945,
       "entry_price": 0.12151748247346533,
-      "mark_price": 0.12057,
-      "notional_usd": 81.26496686852705,
-      "unrealized_pnl_usd": 0.6386093706118485,
+      "mark_price": 0.12048,
+      "notional_usd": 81.20430628116563,
+      "unrealized_pnl_usd": 0.6992699579732723,
       "accrued_funding_usd": 0.00018317842416293436,
       "stop_price": 0.12516198201454176,
       "take_price": 0.11248504496364561,
@@ -99,9 +78,9 @@
       "side": "short",
       "qty": 0.5655931397239741,
       "entry_price": 2004.8037666719395,
-      "mark_price": 1992.0,
-      "notional_usd": 1126.6615343301564,
-      "unrealized_pnl_usd": 7.241722592275416,
+      "mark_price": 1992.5,
+      "notional_usd": 1126.9443309000183,
+      "unrealized_pnl_usd": 6.958926022413428,
       "accrued_funding_usd": -9.637344178631832e-06,
       "stop_price": 2027.5165753602096,
       "take_price": 1948.3585615994766,
@@ -116,34 +95,13 @@
       "anchor_state": "complete"
     },
     {
-      "asset": "BTC",
-      "side": "short",
-      "qty": 0.03170293425883233,
-      "entry_price": 73725.09502837397,
-      "mark_price": 73839.0,
-      "notional_usd": 2340.9129627379207,
-      "unrealized_pnl_usd": -3.6111218272143257,
-      "accrued_funding_usd": 0.0019320938332264585,
-      "stop_price": 74341.69132327622,
-      "take_price": 72214.77169180944,
-      "entry_time_iso": "2026-05-28T03:15:00+00:00",
-      "tier": "T1",
-      "regime": "DN\u00b7NORM\u00b7NEU",
-      "leverage": 21.99412772589921,
-      "audit_id": "2f2eca5b-0154-4fbb-9685-e1af52f935b6",
-      "decision_id": "d-0001",
-      "arc_tx_hash": "0xc8ab32d9ecf110b36f49148857ae7066997ab5754643fe8de999d1ee215e5347",
-      "arcscan_url": "https://testnet.arcscan.app/tx/0xc8ab32d9ecf110b36f49148857ae7066997ab5754643fe8de999d1ee215e5347",
-      "anchor_state": "complete"
-    },
-    {
       "asset": "SOL",
       "side": "short",
       "qty": 4.482171704566055,
       "entry_price": 81.11112517920739,
-      "mark_price": 81.575,
-      "notional_usd": 365.633156799976,
-      "unrealized_pnl_usd": -2.0791665962172923,
+      "mark_price": 81.568,
+      "notional_usd": 365.601781598044,
+      "unrealized_pnl_usd": -2.047791394285307,
       "accrued_funding_usd": -0.0003544039757263183,
       "stop_price": 82.46242481878987,
       "take_price": 79.13636277181521,
@@ -162,9 +120,9 @@
       "side": "short",
       "qty": 379.4740538999427,
       "entry_price": 1.2862271053157488,
-      "mark_price": 1.2938,
-      "notional_usd": 490.9635309357459,
-      "unrealized_pnl_usd": -2.8737170455901535,
+      "mark_price": 1.2934,
+      "notional_usd": 490.81174131418595,
+      "unrealized_pnl_usd": -2.721927424030193,
       "accrued_funding_usd": -0.0009862716037097124,
       "stop_price": 1.3049204144472573,
       "take_price": 1.258619378329114,
@@ -180,6 +138,50 @@
     }
   ],
   "recent_decisions": [
+    {
+      "audit_id": "close-BTC-2026-05-28T03:25:00+00:00",
+      "decision_id": "d-0001",
+      "asset": "BTC",
+      "side": "short",
+      "action": "close",
+      "trigger": "cut",
+      "qty": 0.03170293425883233,
+      "entry_price": 73725.09502837397,
+      "exit_price": 73842.91897846264,
+      "realized_pnl_usd": -4.7868995925783455,
+      "realized_pnl_pct": -0.20480451043127482,
+      "held_seconds": 600.0,
+      "leverage": 21.99412772589921,
+      "tier": "T1",
+      "regime": "DN\u00b7NORM\u00b7NEU",
+      "open_audit_id": "2f2eca5b-0154-4fbb-9685-e1af52f935b6",
+      "arc_tx_hash": "0xc8ab32d9ecf110b36f49148857ae7066997ab5754643fe8de999d1ee215e5347",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0xc8ab32d9ecf110b36f49148857ae7066997ab5754643fe8de999d1ee215e5347",
+      "decided_at_iso": "2026-05-28T03:25:00+00:00",
+      "anchor_state": "n/a"
+    },
+    {
+      "audit_id": "close-LINK-2026-05-28T03:25:00+00:00",
+      "decision_id": "d-0009",
+      "asset": "LINK",
+      "side": "short",
+      "action": "close",
+      "trigger": "cut",
+      "qty": 15.389220014270123,
+      "entry_price": 9.143934659643993,
+      "exit_price": 9.049970077287478,
+      "realized_pnl_usd": 1.3974207459147736,
+      "realized_pnl_pct": 0.9930645153610939,
+      "held_seconds": 18600.0,
+      "leverage": 7.801517486538979,
+      "tier": "T3",
+      "regime": "RG\u00b7NORM\u00b7NEU",
+      "open_audit_id": "b870ea2d-7778-4383-9636-63b76b9e1d4a",
+      "arc_tx_hash": "0xfe1aef86474921c68a49b46c88d6b47577803fa8570a94e83ddc2534e9633e5b",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0xfe1aef86474921c68a49b46c88d6b47577803fa8570a94e83ddc2534e9633e5b",
+      "decided_at_iso": "2026-05-28T03:25:00+00:00",
+      "anchor_state": "n/a"
+    },
     {
       "audit_id": "close-AVAX-2026-05-28T03:15:00+00:00",
       "decision_id": "d-0009",
@@ -795,53 +797,49 @@
       "anchor_state": "complete",
       "arc_tx_hash": "0x5c4c42d7d28d33451e65318ed41de84bd6f0c53aa32eb1b99bf175a7d6133f4d",
       "arcscan_url": "https://testnet.arcscan.app/tx/0x5c4c42d7d28d33451e65318ed41de84bd6f0c53aa32eb1b99bf175a7d6133f4d"
-    },
-    {
-      "audit_id": "close-ARB-2026-05-27T21:35:00+00:00",
-      "decision_id": "d-0007",
-      "asset": "ARB",
-      "side": "long",
-      "action": "close",
-      "trigger": "flip",
-      "qty": 692.9026719666866,
-      "entry_price": 0.10920286363899184,
-      "exit_price": 0.10838823479539995,
-      "realized_pnl_usd": -0.600042378813499,
-      "realized_pnl_pct": -0.7930045167915312,
-      "held_seconds": 9900.0,
-      "leverage": 6.254518974922983,
-      "tier": "T3",
-      "regime": "RG\u00b7NORM\u00b7NEU",
-      "open_audit_id": "db847bf9-1a0d-4fd4-931c-208b27b3e166",
-      "arc_tx_hash": "0x2939b8e86742799c582ff4b708a7e42852ccc17d4e1ac4de9561eb74e5edb395",
-      "arcscan_url": "https://testnet.arcscan.app/tx/0x2939b8e86742799c582ff4b708a7e42852ccc17d4e1ac4de9561eb74e5edb395",
-      "decided_at_iso": "2026-05-27T21:35:00+00:00",
-      "anchor_state": "n/a"
-    },
-    {
-      "audit_id": "03354079-65b7-4116-84b7-73f7f8ece920",
-      "decision_id": "d-0001",
-      "asset": "SOL",
-      "side": "short",
-      "action": "open",
-      "verdict": "EXECUTE",
-      "tier": "T2",
-      "regime": "RG\u00b7NORM\u00b7NEU",
-      "leverage": 11.675168802570852,
-      "stop_price": 84.85239656599,
-      "take_price": 81.68390515101498,
-      "notional_usd": 429.2265191800377,
-      "qty": 5.1352098962737065,
-      "entry_price": 83.57428965322674,
-      "edge_after_cost_bps": -7.074357445460874,
-      "reasoning": "Candidate edge is within the 30 bps threshold. Current market conditions favor shorting this asset.",
-      "decided_at_iso": "2026-05-27T21:13:07.928187+00:00",
-      "anchor_state": "complete",
-      "arc_tx_hash": "0x73d68eef85bdd08aef178e0fcc6aebd782a4fff65119968b6d823227ad2579c3",
-      "arcscan_url": "https://testnet.arcscan.app/tx/0x73d68eef85bdd08aef178e0fcc6aebd782a4fff65119968b6d823227ad2579c3"
     }
   ],
   "trade_history": [
+    {
+      "asset": "BTC",
+      "side": "short",
+      "qty": 0.03170293425883233,
+      "entry_price": 73725.09502837397,
+      "exit_price": 73842.91897846264,
+      "realized_pnl_usd": -4.7868995925783455,
+      "accrued_funding_usd": 0.0019320938332264585,
+      "entry_time_iso": "2026-05-28T03:15:00+00:00",
+      "exit_time_iso": "2026-05-28T03:25:00+00:00",
+      "held_seconds": 600.0,
+      "audit_id": "2f2eca5b-0154-4fbb-9685-e1af52f935b6",
+      "decision_id": "d-0001",
+      "leverage_at_open": 21.99412772589921,
+      "tier": "T1",
+      "regime": "DN\u00b7NORM\u00b7NEU",
+      "arc_tx_hash": "0xc8ab32d9ecf110b36f49148857ae7066997ab5754643fe8de999d1ee215e5347",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0xc8ab32d9ecf110b36f49148857ae7066997ab5754643fe8de999d1ee215e5347",
+      "trigger": "cut"
+    },
+    {
+      "asset": "LINK",
+      "side": "short",
+      "qty": 15.389220014270123,
+      "entry_price": 9.143934659643993,
+      "exit_price": 9.049970077287478,
+      "realized_pnl_usd": 1.3974207459147736,
+      "accrued_funding_usd": 0.014051505770236115,
+      "entry_time_iso": "2026-05-27T22:15:00+00:00",
+      "exit_time_iso": "2026-05-28T03:25:00+00:00",
+      "held_seconds": 18600.0,
+      "audit_id": "b870ea2d-7778-4383-9636-63b76b9e1d4a",
+      "decision_id": "d-0009",
+      "leverage_at_open": 7.801517486538979,
+      "tier": "T3",
+      "regime": "RG\u00b7NORM\u00b7NEU",
+      "arc_tx_hash": "0xfe1aef86474921c68a49b46c88d6b47577803fa8570a94e83ddc2534e9633e5b",
+      "arcscan_url": "https://testnet.arcscan.app/tx/0xfe1aef86474921c68a49b46c88d6b47577803fa8570a94e83ddc2534e9633e5b",
+      "trigger": "cut"
+    },
     {
       "asset": "AVAX",
       "side": "short",
@@ -1801,309 +1799,9 @@
       "arc_tx_hash": "0xd56c9b43a1127911dfe126021ade7c779f03c1a6f5a1c405948c490cf7c64779",
       "arcscan_url": "https://testnet.arcscan.app/tx/0xd56c9b43a1127911dfe126021ade7c779f03c1a6f5a1c405948c490cf7c64779",
       "trigger": "flip"
-    },
-    {
-      "asset": "ARB",
-      "side": "long",
-      "qty": 843.5199841122728,
-      "entry_price": 0.10917359924667731,
-      "exit_price": 0.1083543941508158,
-      "realized_pnl_usd": -0.7336811965915397,
-      "accrued_funding_usd": -0.0015357335710744068,
-      "entry_time_iso": "2026-05-27T07:55:00+00:00",
-      "exit_time_iso": "2026-05-27T09:15:00+00:00",
-      "held_seconds": 4800.0,
-      "audit_id": "505d8bb9-a8ce-470e-a6e1-c946d7840c23",
-      "decision_id": "d-0005",
-      "leverage_at_open": 6.871113513896158,
-      "tier": "T3",
-      "regime": "RG\u00b7NORM\u00b7NEU",
-      "arc_tx_hash": "0xfc696d19739100743421adedb51e4a76982810faf3359759a92bad66ebbd48ff",
-      "arcscan_url": "https://testnet.arcscan.app/tx/0xfc696d19739100743421adedb51e4a76982810faf3359759a92bad66ebbd48ff",
-      "trigger": "flip"
-    },
-    {
-      "asset": "DOGE",
-      "side": "long",
-      "qty": 2358.7827996515816,
-      "entry_price": 0.10217788189238328,
-      "exit_price": 0.10168216309914423,
-      "realized_pnl_usd": -1.282996747383173,
-      "accrued_funding_usd": -0.0057730226195305935,
-      "entry_time_iso": "2026-05-27T07:20:00+00:00",
-      "exit_time_iso": "2026-05-27T09:15:00+00:00",
-      "held_seconds": 6900.0,
-      "audit_id": "508aaf5b-80b2-4c85-8822-25be8400ae3b",
-      "decision_id": "d-0001",
-      "leverage_at_open": 9.217165110201794,
-      "tier": "T3",
-      "regime": "RG\u00b7NORM\u00b7NEU",
-      "arc_tx_hash": "0x209c259fd528576b966383c60b48751440f46ddf81541369b79938156bcbc68a",
-      "arcscan_url": "https://testnet.arcscan.app/tx/0x209c259fd528576b966383c60b48751440f46ddf81541369b79938156bcbc68a",
-      "trigger": "cut"
     }
   ],
   "equity_curve": [
-    {
-      "timestamp_iso": "2026-05-28T03:14:51.382446+00:00",
-      "equity_usd": 936.2007197178878
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:14:52.392505+00:00",
-      "equity_usd": 936.2007197178878
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:14:53.402371+00:00",
-      "equity_usd": 936.2007197178878
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:14:54.413029+00:00",
-      "equity_usd": 936.2007197178878
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:14:55.422498+00:00",
-      "equity_usd": 936.2007197178878
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:14:56.427681+00:00",
-      "equity_usd": 936.2007197178878
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:14:57.433780+00:00",
-      "equity_usd": 936.2007197178878
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:14:59.395795+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:14:59.432957+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:00.456180+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:01.469273+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:02.477668+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:03.488130+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:04.498307+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:05.507809+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:06.519277+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:07.529320+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:08.537862+00:00",
-      "equity_usd": 935.9636732468316
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:10.551025+00:00",
-      "equity_usd": 936.1788163234047
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:10.569167+00:00",
-      "equity_usd": 936.1788163234047
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:11.597149+00:00",
-      "equity_usd": 936.1788163234047
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:12.608383+00:00",
-      "equity_usd": 936.1788163234047
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:13.617413+00:00",
-      "equity_usd": 936.1783201269884
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:14.628303+00:00",
-      "equity_usd": 936.1785444069752
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:15.633186+00:00",
-      "equity_usd": 936.1785444069752
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:16.641096+00:00",
-      "equity_usd": 936.1785444069752
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:17.650460+00:00",
-      "equity_usd": 936.1784005637556
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:18.659513+00:00",
-      "equity_usd": 936.1784005637556
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:19.666905+00:00",
-      "equity_usd": 936.1784005637556
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:21.522297+00:00",
-      "equity_usd": 935.138982308637
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:21.686221+00:00",
-      "equity_usd": 935.138982308637
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:22.693196+00:00",
-      "equity_usd": 935.138982308637
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:23.701941+00:00",
-      "equity_usd": 935.138982308637
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:24.710896+00:00",
-      "equity_usd": 935.138982308637
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:25.719306+00:00",
-      "equity_usd": 935.138982308637
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:26.730092+00:00",
-      "equity_usd": 935.1390679693205
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:27.739441+00:00",
-      "equity_usd": 935.1390679693205
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:28.749118+00:00",
-      "equity_usd": 935.1392138783627
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:29.758848+00:00",
-      "equity_usd": 935.1392138783627
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:30.757758+00:00",
-      "equity_usd": 935.1392138783627
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:32.399232+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:32.780033+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:33.789371+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:34.800158+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:35.803174+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:36.821019+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:37.829000+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:38.841351+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:39.850187+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:40.855849+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:41.865950+00:00",
-      "equity_usd": 934.92271568596
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:43.383077+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:43.890013+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:44.900725+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:45.909667+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:46.913310+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:47.921767+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:48.929872+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:49.944772+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:50.946635+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:51.951934+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:52.968507+00:00",
-      "equity_usd": 935.2111966320776
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:54.309313+00:00",
-      "equity_usd": 936.3150435239419
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:54.986099+00:00",
-      "equity_usd": 936.3150435239419
-    },
-    {
-      "timestamp_iso": "2026-05-28T03:15:55.996853+00:00",
-      "equity_usd": 936.3150435239419
-    },
     {
       "timestamp_iso": "2026-05-28T03:15:57.005533+00:00",
       "equity_usd": 936.3150435239419
@@ -4723,6 +4421,266 @@
     {
       "timestamp_iso": "2026-05-28T03:26:57.635855+00:00",
       "equity_usd": 946.2671303197836
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:26:58.645896+00:00",
+      "equity_usd": 946.2671303197836
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:26:59.654988+00:00",
+      "equity_usd": 946.2671303197836
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:00.665866+00:00",
+      "equity_usd": 946.2671303197836
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:01.664002+00:00",
+      "equity_usd": 946.2671303197836
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:03.378299+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:03.696426+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:04.704784+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:05.705489+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:06.727033+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:07.734074+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:08.746157+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:09.756737+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:10.765436+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:11.776376+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:12.785600+00:00",
+      "equity_usd": 946.8665081898466
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:14.396754+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:14.807154+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:15.816623+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:16.826603+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:17.831831+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:18.834565+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:19.855205+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:20.863534+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:21.872491+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:22.885897+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:23.894346+00:00",
+      "equity_usd": 945.9453580221343
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:25.335441+00:00",
+      "equity_usd": 945.7626499350168
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:25.914123+00:00",
+      "equity_usd": 945.7626499350168
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:26.925464+00:00",
+      "equity_usd": 945.7626499350168
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:27.935180+00:00",
+      "equity_usd": 945.7626499350168
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:28.941538+00:00",
+      "equity_usd": 945.7626499350168
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:29.954797+00:00",
+      "equity_usd": 945.7626499350168
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:30.963768+00:00",
+      "equity_usd": 945.7626499350168
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:31.970739+00:00",
+      "equity_usd": 945.7626499350168
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:32.986202+00:00",
+      "equity_usd": 945.7626499350168
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:33.994443+00:00",
+      "equity_usd": 944.3968409289321
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:35.005790+00:00",
+      "equity_usd": 944.3968409289321
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:36.218948+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:37.026017+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:38.031829+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:39.042131+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:40.056269+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:41.065829+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:42.071555+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:43.084980+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:44.091808+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:45.102779+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:46.115637+00:00",
+      "equity_usd": 944.3782674396186
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:47.221181+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:48.133323+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:49.146968+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:50.156688+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:51.164740+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:52.176498+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:53.186824+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:54.196920+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:55.206398+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:56.213771+00:00",
+      "equity_usd": 945.227640757429
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:58.264329+00:00",
+      "equity_usd": 944.9981655827562
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:58.286705+00:00",
+      "equity_usd": 944.9981655827562
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:27:59.312000+00:00",
+      "equity_usd": 944.9981655827562
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:28:00.317035+00:00",
+      "equity_usd": 944.9981655827562
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:28:01.327233+00:00",
+      "equity_usd": 944.9981655827562
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:28:02.334798+00:00",
+      "equity_usd": 944.9981655827562
+    },
+    {
+      "timestamp_iso": "2026-05-28T03:28:03.341292+00:00",
+      "equity_usd": 944.9981655827562
     }
   ]
 }
